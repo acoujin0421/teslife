@@ -1,0 +1,12 @@
+{
+  "charge": [],
+  "hipass": [],
+  "expense": [],
+  "ui": {
+    "month": "",
+    "trendMetric": "total",
+    "providerExtras": [],
+    "chargeTypeFilter": "all",
+    "hipassKindFilter": "all"
+  }
+}

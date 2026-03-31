@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tesla Model Y 02수2918 차계부</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <div class="brand">
+          <div class="brand__title">Tesla Model Y · 02수2918 차계부</div>
+          <div class="brand__sub">충전 · 하이패스 · 지출을 한 곳에</div>
+        </div>
+        <div class="top__actions">
+          <button class="btn btn--ghost" id="btnCloud" type="button">클라우드</button>
+          <button class="btn btn--ghost" id="btnExport" type="button">내보내기</button>
+          <label class="btn btn--ghost" for="importFile">가져오기</label>
+          <input id="importFile" class="sr-only" type="file" accept="application/json" />
+          <button class="btn btn--danger" id="btnReset" type="button">초기화</button>
+        </div>
+      </div>
+    </header>
+
+    <dialog class="modal" id="cloudModal">
+      <div class="modal__card">
+        <div class="modal__head">
+          <div>
+            <div class="modal__title">GitHub 동기화</div>
+            <div class="muted">저장소의 <code>data.json</code>을 DB처럼 사용합니다. 토큰은 이 브라우저에만 저장됩니다.</div>
+          </div>
+          <button class="iconBtn" id="btnCloseCloud" type="button">닫기</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form__grid">
+          <div class="row">
+            <label class="label" for="ghOwner">Owner</label>
+            <input class="input" id="ghOwner" type="text" placeholder="예) my-github-id" autocomplete="off" />
+          </div>
+          <div class="row">
+            <label class="label" for="ghRepo">Repo</label>
+            <input class="input" id="ghRepo" type="text" placeholder="예) tesla-ledger" autocomplete="off" />
+          </div>
+          <div class="row">
+            <label class="label" for="ghBranch">Branch</label>
+            <input class="input" id="ghBranch" type="text" placeholder="main" autocomplete="off" />
+          </div>
+          <div class="row">
+            <label class="label" for="ghPath">Path</label>
+            <input class="input" id="ghPath" type="text" placeholder="data.json" autocomplete="off" />
+          </div>
+          <div class="row" style="grid-column: 1 / -1">
+            <label class="label" for="ghToken">Personal Access Token (PAT)</label>
+            <input class="input" id="ghToken" type="password" placeholder="ghp_..." autocomplete="off" />
+            <div class="muted" style="margin-top:6px">
+              권장: Fine-grained token으로 만들고, 이 저장소에만 권한을 주세요. 최소 권한은 <b>Contents: Read and write</b>.
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="modal__actions">
+          <label class="toggle">
+            <input id="ghAutosync" type="checkbox" />
+            <span>자동 저장(변경 후 2초)</span>
+          </label>
+          <div class="modal__btns">
+            <button class="btn btn--ghost" id="btnCloudLoad" type="button">불러오기</button>
+            <button class="btn" id="btnCloudSave" type="button">저장(커밋)</button>
+          </div>
+        </div>
+
+        <div class="modal__status muted" id="cloudStatus">-</div>
+      </div>
+    </dialog>
+
+    <main class="wrap">
+      <section class="grid">
+        <aside class="card">
+          <h2 class="card__title">월 선택</h2>
+          <div class="row">
+            <label class="label" for="monthPicker">기준 월</label>
+            <input id="monthPicker" class="input" type="month" />
+          </div>
+
+          <div class="divider"></div>
+
+          <h2 class="card__title">요약 (선택 월)</h2>
+          <div class="kpis">
+            <div class="kpi">
+              <div class="kpi__label">충전비</div>
+              <div class="kpi__value" id="kpiChargeCost">-</div>
+              <div class="kpi__meta" id="kpiChargeMeta">-</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__label">하이패스</div>
+              <div class="kpi__value" id="kpiHipassCost">-</div>
+              <div class="kpi__meta" id="kpiHipassMeta">-</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__label">기타 지출</div>
+              <div class="kpi__value" id="kpiExpenseCost">-</div>
+              <div class="kpi__meta" id="kpiExpenseMeta">-</div>
+            </div>
+            <div class="kpi kpi--total">
+              <div class="kpi__label">총합</div>
+              <div class="kpi__value" id="kpiTotal">-</div>
+              <div class="kpi__meta">충전 + 하이패스 + 기타</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <section class="chartCard" aria-label="월별 추이">
+            <div class="chartHead">
+              <h3 class="chartTitle">월별 추이 (최근 12개월)</h3>
+              <select id="trendMetric" class="chartSelect" aria-label="추이 항목 선택">
+                <option value="total">총합</option>
+                <option value="charge">충전비</option>
+                <option value="hipass">하이패스(사용)</option>
+                <option value="expense">기타 지출</option>
+              </select>
+            </div>
+            <div class="spark" id="sparkWrap"></div>
+            <div class="spark__hint" id="sparkHint">-</div>
+          </section>
+
+          <div class="divider"></div>
+
+          <section aria-label="충전 단가 요약">
+            <h3 class="section__title">충전 단가 요약 (선택 월)</h3>
+            <div class="muted">단가(원/kWh)별로 총 충전량과 횟수를 묶어서 보여줍니다.</div>
+            <div id="chargeUnitSummary" class="muted" style="margin-top:10px">-</div>
+          </section>
+
+          <div class="divider"></div>
+
+          <section aria-label="이번달 충전 추이 문장">
+            <h3 class="section__title">충전 추이</h3>
+            <div id="chargeTrendMessage" class="muted" style="margin-top:8px">-</div>
+          </section>
+        </aside>
+
+        <section class="card">
+          <div class="tabs" role="tablist" aria-label="기록 종류">
+            <button class="tab is-active" type="button" data-tab="charge" role="tab" aria-selected="true">
+              충전일지
+            </button>
+            <button class="tab" type="button" data-tab="hipass" role="tab" aria-selected="false">
+              하이패스
+            </button>
+            <button class="tab" type="button" data-tab="expense" role="tab" aria-selected="false">
+              기타 지출
+            </button>
+          </div>
+
+          <div class="tabpanes">
+            <section class="pane is-active" id="pane-charge" role="tabpanel">
+              <div class="pane__head">
+                <h2 class="card__title">충전 기록 추가</h2>
+                <p class="muted">필수만 빠르게: 날짜, 충전량(kWh), 금액</p>
+              </div>
+              <div class="editBar" id="editBarCharge" hidden>
+                <div class="editBar__text">현재 <b>충전 기록</b>을 편집 중입니다.</div>
+                <button class="btn btn--ghost" id="btnCancelChargeEdit" type="button">편집 취소</button>
+              </div>
+              <form id="formCharge" class="form">
+                <div class="form__grid">
+                  <div class="row">
+                    <label class="label" for="cDate">날짜</label>
+                    <input class="input" id="cDate" name="date" type="date" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cType">유형</label>
+                    <select class="input" id="cType" name="type">
+                      <option value="집밥">집밥</option>
+                      <option value="완속">완속</option>
+                      <option value="급속">급속</option>
+                      <option value="슈퍼차저">슈퍼차저</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cProvider">사업자</label>
+                    <input
+                      class="input"
+                      id="cProvider"
+                      name="provider"
+                      type="text"
+                      list="providerList"
+                      placeholder="예) 테슬라, 환경부, 차지비… (직접 입력 가능)"
+                      autocomplete="off"
+                    />
+                    <datalist id="providerList"></datalist>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cKwh">충전량 (kWh)</label>
+                    <input class="input" id="cKwh" name="kwh" type="number" inputmode="decimal" min="0" step="0.1" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cCost">금액 (원)</label>
+                    <input class="input" id="cCost" name="cost" type="number" inputmode="numeric" min="0" step="1" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cUnit">단가 (원/kWh)</label>
+                    <input class="input" id="cUnit" name="unit" type="text" readonly value="-" />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="cNote">메모</label>
+                    <input class="input" id="cNote" name="note" type="text" placeholder="예) 집 앞, 할인 적용" />
+                  </div>
+                </div>
+                <div class="form__actions">
+                  <button class="btn" id="btnChargeSubmit" type="submit">저장</button>
+                </div>
+              </form>
+
+              <div class="divider"></div>
+              <div class="listHead">
+                <h3 class="section__title" style="margin:0">목록</h3>
+                <div class="listHead__filters">
+                  <label class="label" for="chargeTypeFilter" style="margin:0">유형</label>
+                  <select id="chargeTypeFilter" class="chartSelect" aria-label="충전 유형 필터">
+                    <option value="all">전체</option>
+                    <option value="집밥">집밥</option>
+                    <option value="완속">완속</option>
+                    <option value="급속">급속</option>
+                    <option value="슈퍼차저">슈퍼차저</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tableWrap">
+                <table class="table" aria-label="충전 기록 목록">
+                  <thead>
+                    <tr>
+                      <th>날짜</th>
+                      <th>유형</th>
+                      <th>사업자</th>
+                      <th class="num">kWh</th>
+                      <th class="num">금액</th>
+                      <th>메모</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyCharge"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="pane" id="pane-hipass" role="tabpanel">
+              <div class="pane__head">
+                <h2 class="card__title">하이패스 기록 추가</h2>
+                <p class="muted">충전/사용을 분리해서 기록합니다.</p>
+              </div>
+              <div class="editBar" id="editBarHipass" hidden>
+                <div class="editBar__text">현재 <b>하이패스 기록</b>을 편집 중입니다.</div>
+                <button class="btn btn--ghost" id="btnCancelHipassEdit" type="button">편집 취소</button>
+              </div>
+              <form id="formHipass" class="form">
+                <div class="form__grid">
+                  <div class="row">
+                    <label class="label" for="hDate">날짜</label>
+                    <input class="input" id="hDate" name="date" type="date" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="hKind">구분</label>
+                    <select class="input" id="hKind" name="kind">
+                      <option value="충전">충전</option>
+                      <option value="사용">사용</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="hAmount">금액 (원)</label>
+                    <input class="input" id="hAmount" name="amount" type="number" inputmode="numeric" min="0" step="1" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="hNote">메모</label>
+                    <input
+                      class="input"
+                      id="hNote"
+                      name="note"
+                      type="text"
+                      lang="ko"
+                      value="출퇴근"
+                      placeholder="예) 톨게이트, 카드충전"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+                <div class="form__actions">
+                  <button class="btn" id="btnHipassSubmit" type="submit">저장</button>
+                </div>
+              </form>
+
+              <div class="divider"></div>
+              <div class="listHead">
+                <h3 class="section__title" style="margin:0">목록</h3>
+                <div class="listHead__filters">
+                  <label class="label" for="hipassKindFilter" style="margin:0">구분</label>
+                  <select id="hipassKindFilter" class="chartSelect" aria-label="하이패스 구분 필터">
+                    <option value="all">전체</option>
+                    <option value="충전">충전</option>
+                    <option value="사용">사용</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tableWrap">
+                <table class="table" aria-label="하이패스 기록 목록">
+                  <thead>
+                    <tr>
+                      <th>날짜</th>
+                      <th>구분</th>
+                      <th class="num">금액</th>
+                      <th>메모</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyHipass"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="pane" id="pane-expense" role="tabpanel">
+              <div class="pane__head">
+                <h2 class="card__title">기타 지출 추가</h2>
+                <p class="muted">주차/세차/용품/보험 등 단순 기록용.</p>
+              </div>
+              <div class="editBar" id="editBarExpense" hidden>
+                <div class="editBar__text">현재 <b>기타 지출</b>을 편집 중입니다.</div>
+                <button class="btn btn--ghost" id="btnCancelExpenseEdit" type="button">편집 취소</button>
+              </div>
+              <form id="formExpense" class="form">
+                <div class="form__grid">
+                  <div class="row">
+                    <label class="label" for="eDate">날짜</label>
+                    <input class="input" id="eDate" name="date" type="date" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="eCategory">카테고리</label>
+                    <select class="input" id="eCategory" name="category">
+                      <option value="주차">주차</option>
+                      <option value="세차">세차</option>
+                      <option value="용품">용품</option>
+                      <option value="정비">정비</option>
+                      <option value="보험/세금">보험/세금</option>
+                      <option value="기타">기타</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="eCost">금액 (원)</label>
+                    <input class="input" id="eCost" name="cost" type="number" inputmode="numeric" min="0" step="1" required />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="eNote">메모</label>
+                    <input class="input" id="eNote" name="note" type="text" placeholder="예) 주차권, 세차장" />
+                  </div>
+                </div>
+                <div class="form__actions">
+                  <button class="btn" id="btnExpenseSubmit" type="submit">저장</button>
+                </div>
+              </form>
+
+              <div class="divider"></div>
+              <h3 class="section__title">목록</h3>
+              <div class="tableWrap">
+                <table class="table" aria-label="기타 지출 목록">
+                  <thead>
+                    <tr>
+                      <th>날짜</th>
+                      <th>카테고리</th>
+                      <th class="num">금액</th>
+                      <th>메모</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyExpense"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </section>
+      </section>
+
+      <footer class="foot">
+        <div class="muted">
+          기본은 로컬 저장입니다. GitHub 동기화를 켜면 다른 기기에서도 같은 데이터로 사용 가능합니다.
+        </div>
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
