@@ -14,14 +14,18 @@
           <div class="brand__sub">충전 · 하이패스 · 지출을 한 곳에</div>
         </div>
         <div class="top__actions top__actions--cloud">
-          <button class="btn btn--ghost" id="btnCloudPull" type="button">클라우드에서 불러오기</button>
-          <button class="btn" id="btnCloudPush" type="button">클라우드 저장</button>
-          <button class="btn btn--ghost" id="btnCloudSettings" type="button" title="자동 저장·토큰">⚙</button>
+          <div class="top__group top__group--cloud">
+            <button class="btn btn--ghost" id="btnCloudPull" type="button">클라우드에서 불러오기</button>
+            <button class="btn" id="btnCloudPush" type="button">클라우드 저장</button>
+            <button class="btn btn--ghost" id="btnCloudSettings" type="button" title="자동 저장·토큰">⚙</button>
+          </div>
           <span class="cloudBarStatus muted" id="cloudBarStatus" aria-live="polite"></span>
-          <button class="btn btn--ghost" id="btnExport" type="button">내보내기</button>
-          <label class="btn btn--ghost" for="importFile">가져오기</label>
-          <input id="importFile" class="sr-only" type="file" accept="application/json" />
-          <button class="btn btn--danger" id="btnReset" type="button">초기화</button>
+          <div class="top__group top__group--file">
+            <button class="btn btn--ghost" id="btnExport" type="button">내보내기</button>
+            <label class="btn btn--ghost" for="importFile">가져오기</label>
+            <input id="importFile" class="sr-only" type="file" accept="application/json" />
+            <button class="btn btn--danger" id="btnReset" type="button">초기화</button>
+          </div>
         </div>
       </div>
     </header>

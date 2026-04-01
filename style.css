@@ -39,11 +39,36 @@ body{
   background: linear-gradient(to bottom, rgba(246,247,251,.92), rgba(246,247,251,.70));
   border-bottom:1px solid var(--line);
 }
-.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.top .wrap{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:nowrap}
+.brand{flex:0 1 auto;min-width:0}
 .brand__title{font-size:var(--fs-18);font-weight:900;letter-spacing:.2px}
 .brand__sub{font-size:var(--fs-12);color:var(--muted);margin-top:3px}
-.top__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
-.top__actions--cloud .cloudBarStatus{flex:1 1 140px;min-width:0;font-size:var(--fs-11);text-align:right}
+.top__actions{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  flex:1 1 auto;
+  min-width:0;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:2px;
+}
+.top__group{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;flex-shrink:0}
+.top__actions--cloud .cloudBarStatus{
+  flex:0 1 180px;
+  min-width:0;
+  font-size:var(--fs-11);
+  text-align:right;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media (max-width: 1100px){
+  .top .wrap{flex-wrap:wrap}
+  .top__actions{width:100%;justify-content:flex-start}
+}
 
 .card{
   background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(251,251,255,.92));
