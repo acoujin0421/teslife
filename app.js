@@ -138,8 +138,12 @@ function loadCloudConfig() {
 }
 
 function saveCloudConfig(next) {
-  cloud = { ...cloud, ...next };
-  localStorage.setItem(CLOUD_KEY, JSON.stringify(cloud));
+  try {
+    cloud = { ...cloud, ...next };
+    localStorage.setItem(CLOUD_KEY, JSON.stringify(cloud));
+  } catch (e) {
+    console.warn("saveCloudConfig", e);
+  }
 }
 
 function hasEncryptedPreset() {
@@ -168,53 +172,71 @@ function persistPresetPassword(plain) {
 
 /** 저장소의 cloud-preset.js — 평문 또는 복호화된 캐시 */
 function applyCloudPreset() {
-  let p = null;
-  if (hasEncryptedPreset()) {
-    p = decryptedPresetCache;
-    if (!p) return;
-  } else {
-    p = typeof window !== "undefined" ? window.__TESLA_CLOUD_PRESET__ : null;
+  try {
+    let p = null;
+    if (hasEncryptedPreset()) {
+      p = decryptedPresetCache;
+      if (!p) return;
+    } else {
+      p = typeof window !== "undefined" ? window.__TESLA_CLOUD_PRESET__ : null;
+    }
+    if (!p || typeof p !== "object") return;
+    const owner = String(p.owner || "").trim();
+    const repo = String(p.repo || "").trim();
+    if (!owner || !repo) return;
+    if (owner === "YOUR_GITHUB_USERNAME" || repo === "YOUR_REPO_NAME") return;
+    const branch = String(p.branch || "main").trim() || "main";
+    const path = String(p.path || "data.json").trim() || "data.json";
+    const next = { owner, repo, branch, path };
+    const pt = String(p.token || "").trim();
+    if (pt) next.token = pt;
+    saveCloudConfig(next);
+  } catch (e) {
+    console.warn("applyCloudPreset", e);
   }
-  if (!p || typeof p !== "object") return;
-  const owner = String(p.owner || "").trim();
-  const repo = String(p.repo || "").trim();
-  if (!owner || !repo) return;
-  if (owner === "YOUR_GITHUB_USERNAME" || repo === "YOUR_REPO_NAME") return;
-  const branch = String(p.branch || "main").trim() || "main";
-  const path = String(p.path || "data.json").trim() || "data.json";
-  const next = { owner, repo, branch, path };
-  const pt = String(p.token || "").trim();
-  if (pt) next.token = pt;
-  saveCloudConfig(next);
 }
 
 async function tryLoadEncryptedPreset(options = {}) {
   const silent = Boolean(options.silent);
-  decryptedPresetCache = null;
-  if (!hasEncryptedPreset()) return;
-  if (!window.PresetCrypto?.decryptPreset) {
-    if (!silent) setCloudStatus("preset-crypto.js 로드 필요");
-    return;
-  }
-  let payload = window.__TESLA_CLOUD_PRESET_ENC__;
-  if (typeof payload === "string") {
-    try {
-      payload = JSON.parse(payload);
-    } catch {
-      if (!silent) setCloudStatus("__TESLA_CLOUD_PRESET_ENC__ JSON 형식이 아닙니다.");
+  try {
+    decryptedPresetCache = null;
+    if (!hasEncryptedPreset()) return;
+    if (!window.PresetCrypto?.decryptPreset) {
+      if (!silent) setCloudStatus("preset-crypto.js 로드 필요");
       return;
     }
-  }
-  const pass = getPresetPasswordForDecrypt();
-  if (!pass) {
-    setCloudStatus("암호화 프리셋: ⚙에서 비밀번호 입력 후 「적용」");
-    return;
-  }
-  try {
-    decryptedPresetCache = await window.PresetCrypto.decryptPreset(payload, pass);
-    if (!silent) setCloudStatus("프리셋 복호화 완료");
+    let payload = window.__TESLA_CLOUD_PRESET_ENC__;
+    if (typeof payload === "string") {
+      try {
+        payload = JSON.parse(payload);
+      } catch {
+        if (!silent) setCloudStatus("__TESLA_CLOUD_PRESET_ENC__ JSON 형식이 아닙니다.");
+        return;
+      }
+    }
+    const pass = getPresetPasswordForDecrypt();
+    if (!pass) {
+      setCloudStatus("암호화 프리셋: ⚙에서 비밀번호 입력 후 「적용」");
+      return;
+    }
+    try {
+      decryptedPresetCache = await window.PresetCrypto.decryptPreset(payload, pass);
+      if (!silent) setCloudStatus("프리셋 복호화 완료");
+    } catch (e) {
+      const name = e?.name || "";
+      const msg = String(e?.message || e);
+      let hint = msg;
+      if (name === "OperationError" || /decrypt|unable|fail/i.test(msg)) {
+        hint = "비밀번호가 틀렸거나, 암호문이 잘못 복사되었습니다. encrypt-preset.html로 다시 생성해 보세요.";
+      } else if (msg.includes("잘못된 암호화")) {
+        hint = "cloud-preset.js의 __TESLA_CLOUD_PRESET_ENC__ 한 줄이 온전한지 확인하세요.";
+      }
+      setCloudStatus(`프리셋 복호화 실패: ${hint}`);
+      console.warn("decryptPreset", e);
+    }
   } catch (e) {
-    setCloudStatus(`프리셋 복호화 실패: ${e?.message || e}`);
+    console.warn("tryLoadEncryptedPreset", e);
+    if (!silent) setCloudStatus(`프리셋 처리 오류: ${e?.message || e}`);
   }
 }
 
@@ -1272,12 +1294,31 @@ async function init() {
   render();
 }
 
-document.addEventListener("DOMContentLoaded", () => void init());
+document.addEventListener("DOMContentLoaded", () => {
+  void init().catch((e) => console.error("init", e));
+});
+
+function openCloudSettingsDialog(dlg) {
+  if (!dlg) return;
+  if (typeof dlg.showModal === "function") {
+    try {
+      dlg.showModal();
+    } catch (e) {
+      dlg.setAttribute("open", "");
+    }
+  } else {
+    dlg.setAttribute("open", "");
+  }
+}
 
 async function wireCloudButtons() {
-  cloud = loadCloudConfig();
-  await tryLoadEncryptedPreset({ silent: true });
-  applyCloudPreset();
+  try {
+    cloud = loadCloudConfig();
+    await tryLoadEncryptedPreset({ silent: true });
+    applyCloudPreset();
+  } catch (e) {
+    console.warn("wireCloudButtons preset", e);
+  }
 
   const btnPull = document.getElementById("btnCloudPull");
   const btnPush = document.getElementById("btnCloudPush");
@@ -1293,14 +1334,20 @@ async function wireCloudButtons() {
     cloud = loadCloudConfig();
     updateCloudSettingsInputs();
     setCloudStatus(cloud.lastSyncAt ? `마지막 동기화: ${new Date(cloud.lastSyncAt).toLocaleString("ko-KR")}` : "토큰·자동 저장을 설정하세요.");
-    dlg?.showModal();
+    openCloudSettingsDialog(dlg);
   });
-  close?.addEventListener("click", () => dlg?.close());
+  close?.addEventListener("click", () => {
+    if (dlg && typeof dlg.close === "function") dlg.close();
+    else dlg?.removeAttribute("open");
+  });
   dlg?.addEventListener("click", (e) => {
     const rect = dlg.getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) dlg.close();
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      if (typeof dlg.close === "function") dlg.close();
+      else dlg.removeAttribute("open");
+    }
   });
 
   autosync?.addEventListener("change", () => {
