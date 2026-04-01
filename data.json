@@ -415,8 +415,8 @@
       "note": "센텀 만덕 대심도 출근"
     },
     {
-      "id": "mnfst1yv-6yh9vzc",
-      "createdAt": 1775032981303,
+      "id": "mnfsutcb-md4jfip",
+      "createdAt": 1775033063435,
       "date": "2026-04-01",
       "kind": "사용",
       "amount": 2520,
@@ -425,7 +425,7 @@
   ],
   "expense": [],
   "ui": {
-    "month": "2026-03",
+    "month": "2026-04",
     "trendMetric": "total",
     "providerExtras": [
       "시그넷",
