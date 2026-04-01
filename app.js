@@ -6,6 +6,14 @@ const PRESET_PASS_LOCAL = "tesla-car-ledger:preset-pass-local";
 /** 암호화된 cloud-preset 복호화 결과 (평문 preset보다 우선) */
 let decryptedPresetCache = null;
 
+/** PAT 앞뒤 공백·실수로 붙인 Bearer 접두어 제거 */
+function normalizeGithubToken(raw) {
+  if (raw == null) return "";
+  let s = String(raw).trim();
+  if (/^bearer\s+/i.test(s)) s = s.replace(/^bearer\s+/i, "").trim();
+  return s;
+}
+
 const KNOWN_PROVIDERS = [
   "테슬라(슈퍼차저)",
   "환경부",
@@ -127,7 +135,7 @@ function loadCloudConfig() {
       repo: parsed.repo || "",
       branch: parsed.branch || "main",
       path: parsed.path || "data.json",
-      token: parsed.token || "",
+      token: normalizeGithubToken(parsed.token || ""),
       autosync: Boolean(parsed.autosync),
       lastSha: parsed.lastSha || null,
       lastSyncAt: parsed.lastSyncAt || null,
@@ -139,7 +147,9 @@ function loadCloudConfig() {
 
 function saveCloudConfig(next) {
   try {
-    cloud = { ...cloud, ...next };
+    const merged = { ...cloud, ...next };
+    if (merged.token != null) merged.token = normalizeGithubToken(merged.token);
+    cloud = merged;
     localStorage.setItem(CLOUD_KEY, JSON.stringify(cloud));
   } catch (e) {
     console.warn("saveCloudConfig", e);
@@ -188,7 +198,7 @@ function applyCloudPreset() {
     const branch = String(p.branch || "main").trim() || "main";
     const path = String(p.path || "data.json").trim() || "data.json";
     const next = { owner, repo, branch, path };
-    const pt = String(p.token || "").trim();
+    const pt = normalizeGithubToken(p.token);
     if (pt) next.token = pt;
     saveCloudConfig(next);
   } catch (e) {
@@ -246,8 +256,9 @@ function syncCloudBeforeApi() {
   const tokenEl = document.getElementById("ghToken");
   if (tokenEl) {
     const t = (tokenEl.value || "").trim();
-    if (t && !t.includes("•")) saveCloudConfig({ token: t });
+    if (t && !t.includes("•")) saveCloudConfig({ token: normalizeGithubToken(t) });
   }
+  if (cloud.token) saveCloudConfig({ token: normalizeGithubToken(cloud.token) });
   const auto = document.getElementById("ghAutosync");
   if (auto) saveCloudConfig({ autosync: auto.checked });
 }
@@ -296,7 +307,8 @@ function ghHeaders() {
   const headers = {
     Accept: "application/vnd.github+json",
   };
-  if (cloud.token) headers.Authorization = `Bearer ${cloud.token}`;
+  const t = normalizeGithubToken(cloud.token);
+  if (t) headers.Authorization = `Bearer ${t}`;
   return headers;
 }
 
@@ -310,7 +322,7 @@ async function ghGetJsonFile() {
   const res = await fetch(url, { headers: ghHeaders() });
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`불러오기 실패 (${res.status}): ${txt}`);
+    throw new Error(`불러오기 실패 (${res.status}): ${txt}${hintGithubAuthError(res.status, txt)}`);
   }
   const data = await res.json();
   // { content, sha, encoding }
@@ -331,7 +343,7 @@ async function ghPutJsonFile({ json, message }) {
   const res = await fetch(url, { method: "PUT", headers: { ...ghHeaders(), "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`저장(커밋) 실패 (${res.status}): ${txt}`);
+    throw new Error(`저장(커밋) 실패 (${res.status}): ${txt}${hintGithubAuthError(res.status, txt)}`);
   }
   const data = await res.json();
   const newSha = data?.content?.sha || data?.content?.sha;
@@ -339,7 +351,19 @@ async function ghPutJsonFile({ json, message }) {
 }
 
 function isCloudConfigured() {
-  return Boolean(cloud.owner && cloud.repo && cloud.branch && cloud.path && cloud.token);
+  return Boolean(cloud.owner && cloud.repo && cloud.branch && cloud.path && normalizeGithubToken(cloud.token));
+}
+
+function hintGithubAuthError(status, bodyText) {
+  if (status !== 401 && status !== 403) return "";
+  const lower = String(bodyText || "").toLowerCase();
+  if (lower.includes("bad credentials") || status === 401) {
+    return " 인증 실패: PAT가 잘못되었거나 만료·폐기되었습니다. GitHub에서 새 토큰을 발급하고, Fine-grained면 이 저장소에 Contents(Read/Write) 권한이 있는지 확인하세요.";
+  }
+  if (status === 403 || lower.includes("resource not accessible")) {
+    return " 권한 없음: 토큰에 해당 저장소 Contents 쓰기 권한이 있는지, 저장소 owner/repo 이름이 맞는지 확인하세요.";
+  }
+  return "";
 }
 
 function setCloudStatus(msg) {
