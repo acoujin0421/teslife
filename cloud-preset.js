@@ -7,5 +7,5 @@
  * 평문 __TESLA_CLOUD_PRESET__ 는 사용하지 않습니다.
  */
 
-window.__TESLA_CLOUD_PRESET_ENC__ =
-  "{\"v\":1,\"salt\":\"kalbH/ezomH4Rh1+apa9/Q==\",\"iv\":\"3suV82UzGxwZ+a5g\",\"ciphertext\":\"UBuBvVXq4eQ58nPqrsuEVTpKsBI8nYoW8WBlKvyqCk5Ug4mX6Ryw30DRYw5V5GLC5O1KJwZzTLE/sVaeY729htBil1OV1X5J6JhNFrGSPtnO0WU325qaHpK+Hwcpcrg48Gk/ha35mRxn82E/ZO2UYp5+Emfp+0M+1UsmDCMIBJeSn8igH9wXgfAClKrtbpwJjwEfI77KXgFPPo0rhk+v1nNYWzBsvc2jntLj4+ulUrzR4GAsxGo30d954YVMqsWi3lA6\"}";
+window.__TESLA_CLOUD_PRESET_ENC__ = "{\"v\":1,\"salt\":\"SGNflOyGkqHppXQ7+bHj0w==\",\"iv\":\"b/xlzYnMizNM1Ox2\",\"ciphertext\":\"fw9SO9BgxwyZmeG6kaIjsf4fY5ngOgSWtcwQ8dPa57CaAQQ+beF1o7iTKDK8yPQk678AQ4Nw2qJakR0V6G3CvtbwRMOu+aLRyLgHjVb6CtGerqaa7zutlQpOGWxhh+B+HNXI7bSdCEMUVpB/EqSuLzKpzCWmagrWQYHZOCFt+sHc2qQ7uJY4gpwstOa/Ku2ovMotGyVSQFr9tFdihUzVhthGkXWuVr2rGXtB+oKhcJWXJ3j3Aqw42gkB0yp/sVvv43yC\"}";
+
