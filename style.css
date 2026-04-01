@@ -42,7 +42,8 @@ body{
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand__title{font-size:var(--fs-18);font-weight:900;letter-spacing:.2px}
 .brand__sub{font-size:var(--fs-12);color:var(--muted);margin-top:3px}
-.top__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.top__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.top__actions--cloud .cloudBarStatus{flex:1 1 140px;min-width:0;font-size:var(--fs-11);text-align:right}
 
 .card{
   background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(251,251,255,.92));

@@ -1,5 +1,10 @@
 const STORAGE_KEY = "tesla-car-ledger:v1";
 const CLOUD_KEY = "tesla-car-ledger:cloud:v1";
+const PRESET_PASS_SESSION = "tesla-car-ledger:preset-pass-session";
+const PRESET_PASS_LOCAL = "tesla-car-ledger:preset-pass-local";
+
+/** 암호화된 cloud-preset 복호화 결과 (평문 preset보다 우선) */
+let decryptedPresetCache = null;
 
 const KNOWN_PROVIDERS = [
   "테슬라(슈퍼차저)",
@@ -137,6 +142,94 @@ function saveCloudConfig(next) {
   localStorage.setItem(CLOUD_KEY, JSON.stringify(cloud));
 }
 
+function hasEncryptedPreset() {
+  const enc = typeof window !== "undefined" ? window.__TESLA_CLOUD_PRESET_ENC__ : null;
+  if (enc == null) return false;
+  if (typeof enc === "object" && enc !== null && Number(enc.v) === 1 && enc.ciphertext) return true;
+  const s = typeof enc === "string" ? enc.trim() : "";
+  return s !== "" && s !== "null";
+}
+
+function getPresetPasswordForDecrypt() {
+  const el = document.getElementById("ghPresetPass");
+  const typed = (el?.value || "").trim();
+  if (typed) return typed;
+  return sessionStorage.getItem(PRESET_PASS_SESSION) || localStorage.getItem(PRESET_PASS_LOCAL) || "";
+}
+
+function persistPresetPassword(plain) {
+  sessionStorage.setItem(PRESET_PASS_SESSION, plain);
+  if (document.getElementById("ghPresetRemember")?.checked) {
+    localStorage.setItem(PRESET_PASS_LOCAL, plain);
+  } else {
+    localStorage.removeItem(PRESET_PASS_LOCAL);
+  }
+}
+
+/** 저장소의 cloud-preset.js — 평문 또는 복호화된 캐시 */
+function applyCloudPreset() {
+  let p = null;
+  if (hasEncryptedPreset()) {
+    p = decryptedPresetCache;
+    if (!p) return;
+  } else {
+    p = typeof window !== "undefined" ? window.__TESLA_CLOUD_PRESET__ : null;
+  }
+  if (!p || typeof p !== "object") return;
+  const owner = String(p.owner || "").trim();
+  const repo = String(p.repo || "").trim();
+  if (!owner || !repo) return;
+  if (owner === "YOUR_GITHUB_USERNAME" || repo === "YOUR_REPO_NAME") return;
+  const branch = String(p.branch || "main").trim() || "main";
+  const path = String(p.path || "data.json").trim() || "data.json";
+  const next = { owner, repo, branch, path };
+  const pt = String(p.token || "").trim();
+  if (pt) next.token = pt;
+  saveCloudConfig(next);
+}
+
+async function tryLoadEncryptedPreset(options = {}) {
+  const silent = Boolean(options.silent);
+  decryptedPresetCache = null;
+  if (!hasEncryptedPreset()) return;
+  if (!window.PresetCrypto?.decryptPreset) {
+    if (!silent) setCloudStatus("preset-crypto.js 로드 필요");
+    return;
+  }
+  let payload = window.__TESLA_CLOUD_PRESET_ENC__;
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch {
+      if (!silent) setCloudStatus("__TESLA_CLOUD_PRESET_ENC__ JSON 형식이 아닙니다.");
+      return;
+    }
+  }
+  const pass = getPresetPasswordForDecrypt();
+  if (!pass) {
+    setCloudStatus("암호화 프리셋: ⚙에서 비밀번호 입력 후 「적용」");
+    return;
+  }
+  try {
+    decryptedPresetCache = await window.PresetCrypto.decryptPreset(payload, pass);
+    if (!silent) setCloudStatus("프리셋 복호화 완료");
+  } catch (e) {
+    setCloudStatus(`프리셋 복호화 실패: ${e?.message || e}`);
+  }
+}
+
+function syncCloudBeforeApi() {
+  cloud = loadCloudConfig();
+  applyCloudPreset();
+  const tokenEl = document.getElementById("ghToken");
+  if (tokenEl) {
+    const t = (tokenEl.value || "").trim();
+    if (t && !t.includes("•")) saveCloudConfig({ token: t });
+  }
+  const auto = document.getElementById("ghAutosync");
+  if (auto) saveCloudConfig({ autosync: auto.checked });
+}
+
 function getDataForCloud() {
   // 토큰/편집중 상태는 제외하고, 기록/설정만 저장
   return {
@@ -230,44 +323,29 @@ function isCloudConfigured() {
 function setCloudStatus(msg) {
   const el = document.getElementById("cloudStatus");
   if (el) el.textContent = msg;
+  const bar = document.getElementById("cloudBarStatus");
+  if (bar) bar.textContent = msg;
 }
 
-function updateCloudInputsFromConfig() {
-  const map = [
-    ["ghOwner", cloud.owner],
-    ["ghRepo", cloud.repo],
-    ["ghBranch", cloud.branch],
-    ["ghPath", cloud.path],
-    ["ghToken", cloud.token ? "••••••••" : ""],
-  ];
-  for (const [id, val] of map) {
-    const el = document.getElementById(id);
-    if (el) el.value = val;
-  }
+function updateCloudSettingsInputs() {
+  const tokenEl = document.getElementById("ghToken");
+  if (tokenEl) tokenEl.value = cloud.token ? "••••••••" : "";
   const auto = document.getElementById("ghAutosync");
   if (auto) auto.checked = Boolean(cloud.autosync);
-}
-
-function readCloudInputsToConfig() {
-  const owner = (document.getElementById("ghOwner")?.value || "").trim();
-  const repo = (document.getElementById("ghRepo")?.value || "").trim();
-  const branch = (document.getElementById("ghBranch")?.value || "main").trim() || "main";
-  const path = (document.getElementById("ghPath")?.value || "data.json").trim() || "data.json";
-  const tokenEl = document.getElementById("ghToken");
-  let token = cloud.token;
-  // 사용자가 실제 토큰을 입력했을 때만 갱신 (••••••••는 무시)
-  if (tokenEl) {
-    const t = (tokenEl.value || "").trim();
-    if (t && !t.includes("•")) token = t;
+  const passEl = document.getElementById("ghPresetPass");
+  if (passEl) {
+    passEl.value = "";
+    const stored = sessionStorage.getItem(PRESET_PASS_SESSION) || localStorage.getItem(PRESET_PASS_LOCAL);
+    passEl.placeholder = stored ? "저장됨 · 바꾸려면 새 비밀번호 입력 후 적용" : "encrypt-preset.html로 암호화할 때 쓴 비밀번호";
   }
-  const autosync = Boolean(document.getElementById("ghAutosync")?.checked);
-  saveCloudConfig({ owner, repo, branch, path, token, autosync });
+  const rem = document.getElementById("ghPresetRemember");
+  if (rem) rem.checked = Boolean(localStorage.getItem(PRESET_PASS_LOCAL));
 }
 
 async function cloudLoad() {
-  readCloudInputsToConfig();
+  syncCloudBeforeApi();
   if (!isCloudConfigured()) {
-    setCloudStatus("설정이 부족합니다: owner/repo/branch/path/token을 입력해주세요.");
+    setCloudStatus("cloud-preset.js에 owner/repo를 넣고, 토큰은 preset 또는 ⚙에서 입력하세요.");
     return;
   }
   setCloudStatus("불러오는 중...");
@@ -278,9 +356,9 @@ async function cloudLoad() {
 }
 
 async function cloudSave(reason = "manual") {
-  readCloudInputsToConfig();
+  syncCloudBeforeApi();
   if (!isCloudConfigured()) {
-    setCloudStatus("설정이 부족합니다: owner/repo/branch/path/token을 입력해주세요.");
+    setCloudStatus("cloud-preset.js에 owner/repo를 넣고, 토큰은 preset 또는 ⚙에서 입력하세요.");
     return;
   }
   setCloudStatus("저장(커밋) 중...");
@@ -1172,8 +1250,8 @@ function wireExportImportReset() {
 
 let state = loadState();
 
-function init() {
-  wireCloudModal();
+async function init() {
+  await wireCloudButtons();
   wireTabs();
   wireForms();
   wireChargeUnitAutoCalc();
@@ -1194,39 +1272,60 @@ function init() {
   render();
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", () => void init());
 
-function wireCloudModal() {
+async function wireCloudButtons() {
   cloud = loadCloudConfig();
+  await tryLoadEncryptedPreset({ silent: true });
+  applyCloudPreset();
 
-  const btn = document.getElementById("btnCloud");
-  const dlg = document.getElementById("cloudModal");
-  const close = document.getElementById("btnCloseCloud");
-  const btnLoad = document.getElementById("btnCloudLoad");
-  const btnSave = document.getElementById("btnCloudSave");
+  const btnPull = document.getElementById("btnCloudPull");
+  const btnPush = document.getElementById("btnCloudPush");
+  const btnSettings = document.getElementById("btnCloudSettings");
+  const dlg = document.getElementById("cloudSettingsModal");
+  const close = document.getElementById("btnCloseCloudSettings");
   const autosync = document.getElementById("ghAutosync");
 
-  if (!btn || !dlg) return;
+  btnPull?.addEventListener("click", () => cloudLoad().catch((e) => setCloudStatus(String(e.message || e))));
+  btnPush?.addEventListener("click", () => cloudSave("manual").catch((e) => setCloudStatus(String(e.message || e))));
 
-  btn.addEventListener("click", () => {
-    updateCloudInputsFromConfig();
-    setCloudStatus(cloud.lastSyncAt ? `마지막 동기화: ${new Date(cloud.lastSyncAt).toLocaleString("ko-KR")}` : "설정 후 불러오기/저장을 눌러주세요.");
-    dlg.showModal();
+  btnSettings?.addEventListener("click", () => {
+    cloud = loadCloudConfig();
+    updateCloudSettingsInputs();
+    setCloudStatus(cloud.lastSyncAt ? `마지막 동기화: ${new Date(cloud.lastSyncAt).toLocaleString("ko-KR")}` : "토큰·자동 저장을 설정하세요.");
+    dlg?.showModal();
   });
-  close?.addEventListener("click", () => dlg.close());
-  dlg.addEventListener("click", (e) => {
-    // 바깥 클릭 닫기
+  close?.addEventListener("click", () => dlg?.close());
+  dlg?.addEventListener("click", (e) => {
     const rect = dlg.getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
     if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) dlg.close();
   });
 
-  btnLoad?.addEventListener("click", () => cloudLoad().catch((e) => setCloudStatus(String(e.message || e))));
-  btnSave?.addEventListener("click", () => cloudSave("manual").catch((e) => setCloudStatus(String(e.message || e))));
   autosync?.addEventListener("change", () => {
-    readCloudInputsToConfig();
-    setCloudStatus(cloud.autosync ? "자동 저장이 켜졌습니다. 변경 후 2초 뒤 커밋됩니다." : "자동 저장이 꺼졌습니다.");
+    syncCloudBeforeApi();
+    setCloudStatus(cloud.autosync ? "자동 저장 켜짐 · 변경 후 2초 뒤 커밋" : "자동 저장 꺼짐");
+  });
+
+  const tokenEl = document.getElementById("ghToken");
+  tokenEl?.addEventListener("change", () => {
+    syncCloudBeforeApi();
+    setCloudStatus("토큰이 저장되었습니다.");
+  });
+
+  document.getElementById("btnPresetPassApply")?.addEventListener("click", async () => {
+    const pass = (document.getElementById("ghPresetPass")?.value || "").trim();
+    if (!pass) {
+      setCloudStatus("프리셋 비밀번호를 입력하세요.");
+      return;
+    }
+    persistPresetPassword(pass);
+    const pe = document.getElementById("ghPresetPass");
+    if (pe) pe.value = "";
+    await tryLoadEncryptedPreset({ silent: false });
+    applyCloudPreset();
+    setCloudStatus(decryptedPresetCache ? "프리셋 적용 완료" : "복호화 실패 · 비밀번호 확인");
   });
 }
 

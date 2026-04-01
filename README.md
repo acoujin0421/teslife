@@ -39,24 +39,32 @@ Vercel에서 GitHub 저장소를 Import해서 바로 Deploy 하면 됩니다.
 - Repository access: 이 저장소만 선택
 - Permissions: **Contents = Read and write**
 
-### 5) 앱에서 동기화 설정
+### 5) 저장소에 `cloud-preset.js` 넣기 (한 번만 설정)
 
-상단 **클라우드** 버튼 → 아래 입력:
+프로젝트 루트의 **`cloud-preset.js`**를 열어 아래를 본인 저장소에 맞게 수정한 뒤 커밋합니다.
 
-- Owner: GitHub 아이디(또는 org)
-- Repo: 저장소 이름
-- Branch: 보통 `main`
-- Path: `data.json`
-- Token: 만든 PAT
+- `owner`, `repo`: GitHub 사용자명과 저장소 이름
+- `branch`, `path`: 보통 `main`, `data.json`
+- `token`: (선택) 여기에 PAT를 넣으면 **어느 기기에서도** 추가 입력 없이 불러오기/저장 가능.  
+  비워 두면 **⚙** 메뉴에서 한 번 입력하면 그 브라우저의 localStorage에만 저장됩니다.
 
-버튼:
-- **불러오기**: GitHub의 `data.json`을 읽어 앱에 적용
-- **저장(커밋)**: 현재 데이터를 `data.json`으로 커밋 업데이트
-- **자동 저장**: 변경 후 2초 뒤 자동 커밋(요청/커밋이 잦아질 수 있어 주의)
+#### 암호화해서 넣고 싶을 때 (선택)
 
-### 주의(매우 중요)
+1. 로컬에서 **`encrypt-preset.html`**을 브라우저로 연다.
+2. JSON·비밀번호 입력 후 **암호문 생성** → 출력을 복사한다.
+3. `cloud-preset.js`에서 평문 `__TESLA_CLOUD_PRESET__` 블록은 **삭제**하고, 생성된 `__TESLA_CLOUD_PRESET_ENC__` 한 줄만 넣는다.
+4. 앱 **⚙**에서 같은 비밀번호로 **프리셋 비밀번호 적용** (또는 「이 브라우저에 비밀번호 저장」).
 
-- 토큰은 코드에 하드코딩하지 않습니다.
-- 토큰은 현재 브라우저의 localStorage에 저장됩니다. 공용 PC에서는 사용하지 마세요.
-- 저장소가 Public이면 `data.json`도 공개됩니다. 개인 데이터면 Private을 권장합니다.
+> 브라우저에만 복호화 코드가 있어도, **비밀번호는 저장소에 올리지 않으면** 저장소에는 암호문만 남습니다. (완전한 보안은 아님: 복호화 로직은 공개됨.)
+
+상단 버튼:
+
+- **클라우드에서 불러오기**: GitHub의 `data.json` → 앱
+- **클라우드 저장**: 앱 데이터 → `data.json` 커밋
+- **⚙**: 토큰 입력(선택) · 자동 저장(변경 후 2초마다 커밋)
+
+### 주의
+
+- 저장소가 **Public**이면 `cloud-preset.js`에 넣은 **토큰이 그대로 노출**됩니다. 토큰을 파일에 넣을 때는 **Private 저장소**를 권장합니다.
+- `data.json`도 Public 저장소면 누구나 읽을 수 있습니다.
 

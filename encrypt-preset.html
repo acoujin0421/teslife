@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>cloud-preset 암호문 만들기</title>
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      .box {
+        max-width: 720px;
+        margin: 24px auto;
+        padding: 20px;
+      }
+      textarea.input {
+        min-height: 120px;
+        height: auto;
+        font-family: ui-monospace, monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="card box">
+        <h1 class="card__title">cloud-preset 암호문 생성</h1>
+        <p class="muted">
+          아래 JSON을 비밀번호로 암호화한 뒤, 출력물을 <code>cloud-preset.js</code>의 <code>__TESLA_CLOUD_PRESET_ENC__</code>에 붙여 넣습니다.
+          평문 <code>__TESLA_CLOUD_PRESET__</code> 블록은 삭제하거나 비워 두세요.
+        </p>
+        <div class="divider"></div>
+        <div class="row">
+          <label class="label" for="plainJson">평문 JSON</label>
+          <textarea class="input" id="plainJson" spellcheck="false">{
+  "owner": "내깃허브아이디",
+  "repo": "저장소이름",
+  "branch": "main",
+  "path": "data.json",
+  "token": ""
+}</textarea>
+        </div>
+        <div class="row">
+          <label class="label" for="encPass">암호화 비밀번호</label>
+          <input class="input" id="encPass" type="password" placeholder="복호화 시에도 같은 비밀번호" autocomplete="off" />
+        </div>
+        <div class="form__actions" style="justify-content: flex-start">
+          <button class="btn" id="btnEnc" type="button">암호문 생성</button>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <label class="label" for="outJs">cloud-preset.js에 넣을 내용</label>
+          <textarea class="input" id="outJs" readonly spellcheck="false" placeholder="「암호문 생성」 클릭 후 여기에 표시"></textarea>
+        </div>
+        <p class="muted">이 페이지는 로컬에서만 열어도 되고, 배포 후 URL로 열어도 됩니다. 비밀번호는 서버로 보내지 않습니다.</p>
+      </div>
+    </main>
+    <script src="./preset-crypto.js"></script>
+    <script>
+      document.getElementById("btnEnc").addEventListener("click", async () => {
+        const pass = (document.getElementById("encPass").value || "").trim();
+        if (!pass) {
+          alert("비밀번호를 입력하세요.");
+          return;
+        }
+        let obj;
+        try {
+          obj = JSON.parse(document.getElementById("plainJson").value);
+        } catch (e) {
+          alert("JSON 형식 오류: " + e.message);
+          return;
+        }
+        const payload = await window.PresetCrypto.encryptPreset(obj, pass);
+        const json = JSON.stringify(payload);
+        const out =
+          "// 암호화된 프리셋 — 평문 __TESLA_CLOUD_PRESET__ 는 제거하세요\n" +
+          "window.__TESLA_CLOUD_PRESET_ENC__ = " +
+          JSON.stringify(json) +
+          ";\n";
+        document.getElementById("outJs").value = out;
+      });
+    </script>
+  </body>
+</html>

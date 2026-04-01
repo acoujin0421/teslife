@@ -13,8 +13,11 @@
           <div class="brand__title">Tesla Model Y · 02수2918 차계부</div>
           <div class="brand__sub">충전 · 하이패스 · 지출을 한 곳에</div>
         </div>
-        <div class="top__actions">
-          <button class="btn btn--ghost" id="btnCloud" type="button">클라우드</button>
+        <div class="top__actions top__actions--cloud">
+          <button class="btn btn--ghost" id="btnCloudPull" type="button">클라우드에서 불러오기</button>
+          <button class="btn" id="btnCloudPush" type="button">클라우드 저장</button>
+          <button class="btn btn--ghost" id="btnCloudSettings" type="button" title="자동 저장·토큰">⚙</button>
+          <span class="cloudBarStatus muted" id="cloudBarStatus" aria-live="polite"></span>
           <button class="btn btn--ghost" id="btnExport" type="button">내보내기</button>
           <label class="btn btn--ghost" for="importFile">가져오기</label>
           <input id="importFile" class="sr-only" type="file" accept="application/json" />
@@ -23,58 +26,41 @@
       </div>
     </header>
 
-    <dialog class="modal" id="cloudModal">
+    <dialog class="modal" id="cloudSettingsModal">
       <div class="modal__card">
         <div class="modal__head">
           <div>
-            <div class="modal__title">GitHub 동기화</div>
-            <div class="muted">저장소의 <code>data.json</code>을 DB처럼 사용합니다. 토큰은 이 브라우저에만 저장됩니다.</div>
-          </div>
-          <button class="iconBtn" id="btnCloseCloud" type="button">닫기</button>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="form__grid">
-          <div class="row">
-            <label class="label" for="ghOwner">Owner</label>
-            <input class="input" id="ghOwner" type="text" placeholder="예) my-github-id" autocomplete="off" />
-          </div>
-          <div class="row">
-            <label class="label" for="ghRepo">Repo</label>
-            <input class="input" id="ghRepo" type="text" placeholder="예) tesla-ledger" autocomplete="off" />
-          </div>
-          <div class="row">
-            <label class="label" for="ghBranch">Branch</label>
-            <input class="input" id="ghBranch" type="text" placeholder="main" autocomplete="off" />
-          </div>
-          <div class="row">
-            <label class="label" for="ghPath">Path</label>
-            <input class="input" id="ghPath" type="text" placeholder="data.json" autocomplete="off" />
-          </div>
-          <div class="row" style="grid-column: 1 / -1">
-            <label class="label" for="ghToken">Personal Access Token (PAT)</label>
-            <input class="input" id="ghToken" type="password" placeholder="ghp_..." autocomplete="off" />
-            <div class="muted" style="margin-top:6px">
-              권장: Fine-grained token으로 만들고, 이 저장소에만 권한을 주세요. 최소 권한은 <b>Contents: Read and write</b>.
+            <div class="modal__title">클라우드 설정</div>
+            <div class="muted">
+              평문은 <code>cloud-preset.js</code>, 암호화는 <code>__TESLA_CLOUD_PRESET_ENC__</code>를 사용합니다. 아래는 토큰·암호 복호화·자동 저장입니다.
             </div>
           </div>
+          <button class="iconBtn" id="btnCloseCloudSettings" type="button">닫기</button>
         </div>
-
         <div class="divider"></div>
-
-        <div class="modal__actions">
-          <label class="toggle">
-            <input id="ghAutosync" type="checkbox" />
-            <span>자동 저장(변경 후 2초)</span>
+        <div class="row">
+          <label class="label" for="ghPresetPass">프리셋 복호화 비밀번호 (암호화된 preset 사용 시)</label>
+          <input class="input" id="ghPresetPass" type="password" placeholder="encrypt-preset.html로 만든 암호문용" autocomplete="off" />
+          <label class="toggle" style="margin-top:8px">
+            <input id="ghPresetRemember" type="checkbox" />
+            <span>이 브라우저에 비밀번호 저장 (기기 전용, 편의용)</span>
           </label>
-          <div class="modal__btns">
-            <button class="btn btn--ghost" id="btnCloudLoad" type="button">불러오기</button>
-            <button class="btn" id="btnCloudSave" type="button">저장(커밋)</button>
+          <div class="form__actions" style="margin-top:8px;justify-content:flex-start">
+            <button class="btn" id="btnPresetPassApply" type="button">프리셋 비밀번호 적용</button>
           </div>
         </div>
-
-        <div class="modal__status muted" id="cloudStatus">-</div>
+        <div class="divider"></div>
+        <div class="row">
+          <label class="label" for="ghToken">Personal Access Token (비워 두면 preset 또는 이전에 저장한 값)</label>
+          <input class="input" id="ghToken" type="password" placeholder="ghp_... (최초 1회 또는 변경 시)" autocomplete="off" />
+        </div>
+        <div class="modal__actions" style="margin-top:12px">
+          <label class="toggle">
+            <input id="ghAutosync" type="checkbox" />
+            <span>자동 저장(변경 후 2초마다 커밋)</span>
+          </label>
+        </div>
+        <div class="modal__status muted" id="cloudStatus" style="margin-top:10px">-</div>
       </div>
     </dialog>
 
@@ -391,6 +377,8 @@
       </footer>
     </main>
 
+    <script src="./preset-crypto.js"></script>
+    <script src="./cloud-preset.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
