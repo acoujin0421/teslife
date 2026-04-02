@@ -24,6 +24,7 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+  font-size: 14px;
   background:
     radial-gradient(900px 520px at 12% 0%, rgba(124,140,255,.22), transparent 56%),
     radial-gradient(900px 520px at 92% 18%, rgba(103,211,192,.20), transparent 52%),
@@ -131,19 +132,40 @@ select.input{padding-right:30px}
   .card{padding:14px}
   .row{margin:10px 0}
 
-  /* iOS Safari zoom happens when <16px */
+  /* iOS Safari zoom happens when inputs <16px: keep ONLY form controls at 16px */
   .input,
   select.input,
-  textarea.input,
-  .btn,
-  .tab,
-  .chartSelect{
+  textarea.input{
     font-size: 16px !important;
   }
 
+  /* UI text can stay compact */
+  .btn,
+  .tab,
+  .chartSelect{
+    font-size: 14px !important;
+  }
+
   .input{height:46px}
-  .btn{height:44px}
+  .btn{height:42px}
   .tab{padding:10px 14px}
+
+  /* Mobile header: stack nicely, no awkward overflow */
+  .top .wrap{gap:10px}
+  .top__actions{
+    overflow-x: visible;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .top__group{gap:8px}
+  .top__actions--cloud .cloudBarStatus{
+    order: 3;
+    flex:1 1 100%;
+    text-align:left;
+    font-size: 12px;
+    padding-left: 2px;
+  }
 
   .top__actions--cloud .cloudBarStatus{
     flex:0 1 120px;
@@ -151,7 +173,7 @@ select.input{padding-right:30px}
   }
 
   /* Tables: keep scroll but reduce minimum width */
-  .table{min-width: 560px}
+  .table{min-width: 520px}
   .memoCell{max-width: 260px}
 }
 .btn:hover{filter:brightness(1.05)}
