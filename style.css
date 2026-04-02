@@ -20,6 +20,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
@@ -122,6 +123,36 @@ select.input{padding-right:30px}
   gap:8px;
   white-space:nowrap;
   user-select:none;
+}
+
+/* Mobile usability: prevent iOS input zoom, bigger tap targets */
+@media (max-width: 720px){
+  .wrap{padding:14px}
+  .card{padding:14px}
+  .row{margin:10px 0}
+
+  /* iOS Safari zoom happens when <16px */
+  .input,
+  select.input,
+  textarea.input,
+  .btn,
+  .tab,
+  .chartSelect{
+    font-size: 16px !important;
+  }
+
+  .input{height:46px}
+  .btn{height:44px}
+  .tab{padding:10px 14px}
+
+  .top__actions--cloud .cloudBarStatus{
+    flex:0 1 120px;
+    font-size: 12px;
+  }
+
+  /* Tables: keep scroll but reduce minimum width */
+  .table{min-width: 560px}
+  .memoCell{max-width: 260px}
 }
 .btn:hover{filter:brightness(1.05)}
 .btn:active{transform: translateY(1px)}
