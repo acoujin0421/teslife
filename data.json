@@ -424,6 +424,22 @@
       "kind": "사용",
       "amount": 2660,
       "note": "센텀 만덕 대심도 출근"
+    },
+    {
+      "id": "mnh4q00x-kprokjj",
+      "createdAt": 1775113460385,
+      "date": "2026-04-01",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnh4q8fg-gg2oxy1",
+      "createdAt": 1775113471276,
+      "date": "2026-04-02",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
