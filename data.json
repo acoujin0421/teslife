@@ -440,6 +440,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mniojv72-z7xfmcp",
+      "createdAt": 1775207232686,
+      "date": "2026-04-03",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
