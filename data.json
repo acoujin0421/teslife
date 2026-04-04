@@ -153,6 +153,17 @@
       "cost": 5236,
       "unit": 220,
       "note": ""
+    },
+    {
+      "id": "mnkbmeo8-eis6719",
+      "createdAt": 1775306448584,
+      "date": "2026-04-04",
+      "type": "급속",
+      "provider": "시그넷",
+      "kwh": 7.6,
+      "cost": 2649,
+      "unit": 349,
+      "note": "섬진강휴게소(순천)"
     }
   ],
   "hipass": [
