@@ -459,6 +459,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mnkbjzel-g8aiytj",
+      "createdAt": 1775306335485,
+      "date": "2026-04-04",
+      "kind": "사용",
+      "amount": 9380,
+      "note": "서부산-북장성"
     }
   ],
   "expense": [],
