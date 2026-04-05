@@ -175,6 +175,17 @@
       "cost": 9153,
       "unit": 339,
       "note": ""
+    },
+    {
+      "id": "mnmea92y-bmjgi7r",
+      "createdAt": 1775431852666,
+      "date": "2026-04-06",
+      "type": "집밥",
+      "provider": "TURU",
+      "kwh": 38.7,
+      "cost": 8514,
+      "unit": 220,
+      "note": ""
     }
   ],
   "hipass": [
@@ -497,6 +508,14 @@
       "kind": "사용",
       "amount": 8960,
       "note": "동광주-서부산"
+    },
+    {
+      "id": "mnmeaq95-bc4ao93",
+      "createdAt": 1775431874921,
+      "date": "2026-04-06",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
