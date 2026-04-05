@@ -131,6 +131,50 @@
       "cost": 10832,
       "unit": 262,
       "note": "사천휴게소(부산방향) 할인 적용(원래 14,332원)"
+    },
+    {
+      "id": "mnlpu216-yai6dph",
+      "createdAt": 1775390786250,
+      "date": "2026-04-01",
+      "type": "집밥",
+      "provider": "turu",
+      "kwh": 50.4,
+      "cost": 11088,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mnlpue62-sjv9jo2",
+      "createdAt": 1775390801978,
+      "date": "2026-04-03",
+      "type": "집밥",
+      "provider": "turu",
+      "kwh": 23.8,
+      "cost": 5236,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mnlpvlyz-j2l2rhj",
+      "createdAt": 1775390858747,
+      "date": "2026-04-04",
+      "type": "급속",
+      "provider": "시그넷",
+      "kwh": 7.6,
+      "cost": 2649,
+      "unit": 349,
+      "note": "섬진강휴게소(순천)"
+    },
+    {
+      "id": "mnlpw7up-kro9504",
+      "createdAt": 1775390887105,
+      "date": "2026-04-05",
+      "type": "슈퍼차저",
+      "provider": "테슬라(슈퍼차저)",
+      "kwh": 27,
+      "cost": 9153,
+      "unit": 339,
+      "note": ""
     }
   ],
   "hipass": [
