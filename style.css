@@ -161,15 +161,10 @@ select.input{padding-right:30px}
   .top__group{gap:8px}
   .top__actions--cloud .cloudBarStatus{
     order: 3;
-    flex:1 1 100%;
-    text-align:left;
+    flex: 1 1 100%;
+    text-align: left;
     font-size: 12px;
     padding-left: 2px;
-  }
-
-  .top__actions--cloud .cloudBarStatus{
-    flex:0 1 120px;
-    font-size: 12px;
   }
 
   /* Tables: keep scroll but reduce minimum width */
@@ -224,7 +219,41 @@ select.input{padding-right:30px}
 
 .pane{display:none}
 .pane.is-active{display:block}
-.pane__head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pane__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pane__headText{flex:1 1 200px;min-width:0}
+.pane__headText .card__title{margin-bottom:4px}
+.pane__headText .muted{margin:0}
+.pane__headActions{flex:0 0 auto;display:flex;align-items:center;gap:8px}
+
+.intro{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(720px 420px at 20% 10%, rgba(124,140,255,.35), transparent 55%),
+    radial-gradient(640px 400px at 85% 30%, rgba(103,211,192,.32), transparent 52%),
+    rgba(246,247,251,.94);
+  backdrop-filter: blur(10px);
+}
+.intro.intro--hidden{display:none}
+.intro__card{
+  width:min(420px, 100%);
+  padding:28px 24px;
+  border-radius: var(--radius);
+  border:1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(251,251,255,.96));
+  box-shadow: var(--shadow);
+  text-align:center;
+}
+.intro__logo{font-size:42px;line-height:1;margin-bottom:8px}
+.intro__title{margin:0 0 10px;font-size:var(--fs-18);font-weight:900;color:var(--text)}
+.intro__desc{margin:0 0 18px;font-size:var(--fs-13);color:var(--muted);line-height:1.5}
+.intro__btn{width:100%;max-width:280px;margin:0 auto}
+.intro__hint{margin:14px 0 0;font-size:var(--fs-11);line-height:1.45}
 
 .form{margin-top:10px}
 .editBar{

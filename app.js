@@ -283,7 +283,6 @@ function applyCloudData(obj) {
   };
   state = { ...state, ...next };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  wireProviderDatalist();
   seedProvidersFromHistory();
   syncEditUi();
   render();
@@ -490,6 +489,7 @@ function sortByDateDesc(a, b) {
 function render() {
   renderTables();
   renderKpis();
+  wireProviderDatalist();
 }
 
 function renderTables() {
@@ -968,6 +968,26 @@ function addHipass(form) {
   form.note.value = "출퇴근";
 }
 
+/** 폼에 적힌 날짜·2,520원·메모 출퇴근으로 하이패스(사용) 1건 추가 */
+function addHipassCommuteQuick() {
+  if (getEditing()?.list === "hipass") return;
+  const form = document.getElementById("formHipass");
+  if (!form) return;
+  const date = form.date.value || todayISO();
+  state.hipass.push({
+    id: uid(),
+    createdAt: Date.now(),
+    date,
+    kind: "사용",
+    amount: 2520,
+    note: "출퇴근",
+  });
+  saveState();
+  render();
+  form.amount.value = "";
+  form.note.value = "출퇴근";
+}
+
 function addExpense(form) {
   const date = form.date.value;
   const category = form.category.value;
@@ -1124,7 +1144,19 @@ function normalizeProvider(s) {
   return String(s || "").trim().replace(/\s+/g, " ");
 }
 
+function getProviderUsageCounts() {
+  const counts = new Map();
+  for (const r of state.charge || []) {
+    const p = normalizeProvider(r.provider);
+    if (!p) continue;
+    const key = p.toLowerCase();
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return counts;
+}
+
 function getAllProviders() {
+  const usage = getProviderUsageCounts();
   const extras = Array.isArray(state?.ui?.providerExtras) ? state.ui.providerExtras : [];
   const merged = [...KNOWN_PROVIDERS, ...extras].map(normalizeProvider).filter(Boolean);
   const seen = new Set();
@@ -1135,6 +1167,12 @@ function getAllProviders() {
     seen.add(key);
     out.push(p);
   }
+  out.sort((a, b) => {
+    const ca = usage.get(a.toLowerCase()) || 0;
+    const cb = usage.get(b.toLowerCase()) || 0;
+    if (cb !== ca) return cb - ca;
+    return a.localeCompare(b, "ko-KR");
+  });
   return out;
 }
 
@@ -1246,6 +1284,32 @@ function wireHipassNoteDefaultAndSelect() {
       setTimeout(() => el.select(), 0);
     }
   });
+
+  document.getElementById("btnHipassCommute")?.addEventListener("click", () => addHipassCommuteQuick());
+}
+
+function wireIntroOverlay() {
+  const overlay = document.getElementById("introOverlay");
+  const btn = document.getElementById("btnStartApp");
+  if (!overlay || !btn) return;
+
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    try {
+      syncCloudBeforeApi();
+      await cloudLoad();
+    } catch (e) {
+      setCloudStatus(String(e?.message || e));
+    } finally {
+      btn.disabled = false;
+      overlay.classList.add("intro--hidden");
+      overlay.setAttribute("aria-hidden", "true");
+      setMonthPickerDefault();
+      setDefaultDates();
+      syncEditUi();
+      render();
+    }
+  });
 }
 
 function wireExportImportReset() {
@@ -1298,6 +1362,7 @@ let state = loadState();
 
 async function init() {
   await wireCloudButtons();
+  wireIntroOverlay();
   wireTabs();
   wireForms();
   wireChargeUnitAutoCalc();
