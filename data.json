@@ -413,11 +413,51 @@
       "kind": "사용",
       "amount": 2660,
       "note": "센텀 만덕 대심도 출근"
+    },
+    {
+      "id": "mnlpqy0s-zyg7zwa",
+      "createdAt": 1775390641084,
+      "date": "2026-04-01",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpqygf-qozsupv",
+      "createdAt": 1775390641647,
+      "date": "2026-04-02",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpqytr-v61cl2u",
+      "createdAt": 1775390642127,
+      "date": "2026-04-03",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpsald-1n0p9y1",
+      "createdAt": 1775390704033,
+      "date": "2026-04-04",
+      "kind": "사용",
+      "amount": 9380,
+      "note": "서부산-동광주"
+    },
+    {
+      "id": "mnlpsmw4-lgfgcx6",
+      "createdAt": 1775390719972,
+      "date": "2026-04-05",
+      "kind": "사용",
+      "amount": 8960,
+      "note": "동광주-서부산"
     }
   ],
   "expense": [],
   "ui": {
-    "month": "2026-03",
+    "month": "2026-04",
     "trendMetric": "total",
     "providerExtras": [
       "시그넷",
