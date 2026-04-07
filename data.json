@@ -524,11 +524,19 @@
       "kind": "충전",
       "amount": 30000,
       "note": ""
+    },
+    {
+      "id": "mno8drxg-hjaks2a",
+      "createdAt": 1775542871716,
+      "date": "2026-04-07",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
   "ui": {
-    "month": "2026-03",
+    "month": "2026-04",
     "trendMetric": "total",
     "providerExtras": [
       "시그넷",
