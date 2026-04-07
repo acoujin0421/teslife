@@ -15,7 +15,6 @@ function normalizeGithubToken(raw) {
 }
 
 const KNOWN_PROVIDERS = [
-  "Turu"
   "테슬라(슈퍼차저)",
   "환경부",
   "한국전력(KEPCO)",
