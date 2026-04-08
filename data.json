@@ -197,6 +197,17 @@
       "cost": 1988,
       "unit": 280,
       "note": "단가 인상?"
+    },
+    {
+      "id": "mnpwxexv-slt9arw",
+      "createdAt": 1775644564963,
+      "date": "2026-04-08",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 29.5,
+      "cost": 8260,
+      "unit": 280,
+      "note": "단가오름"
     }
   ],
   "hipass": [
@@ -555,7 +566,7 @@
   ],
   "expense": [],
   "ui": {
-    "month": "2026-03",
+    "month": "2026-04",
     "trendMetric": "total",
     "providerExtras": [
       "시그넷",
