@@ -208,6 +208,17 @@
       "cost": 8260,
       "unit": 280,
       "note": "단가오름"
+    },
+    {
+      "id": "mnsbq6lx-u0jqbvb",
+      "createdAt": 1775790354165,
+      "date": "2026-04-09",
+      "type": "집밥",
+      "provider": "코스텔",
+      "kwh": 9.4,
+      "cost": 2626,
+      "unit": 279,
+      "note": ""
     }
   ],
   "hipass": [
@@ -562,6 +573,22 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mnsbmaf4-41a95t4",
+      "createdAt": 1775790172480,
+      "date": "2026-04-09",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnsbmi4l-r9fze2y",
+      "createdAt": 1775790182469,
+      "date": "2026-04-10",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
@@ -571,6 +598,7 @@
     "providerExtras": [
       "시그넷",
       "워터",
+      "코스텔",
       "turu"
     ],
     "chargeTypeFilter": "all",
