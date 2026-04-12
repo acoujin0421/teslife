@@ -219,6 +219,17 @@
       "cost": 2626,
       "unit": 279,
       "note": ""
+    },
+    {
+      "id": "mnw8ndk3-kob6m2e",
+      "createdAt": 1776027049059,
+      "date": "2026-04-11",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 40.1,
+      "cost": 11228,
+      "unit": 280,
+      "note": ""
     }
   ],
   "hipass": [
