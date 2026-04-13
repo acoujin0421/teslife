@@ -600,6 +600,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mnwm10of-xt5tzqh",
+      "createdAt": 1776049520559,
+      "date": "2026-04-13",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
