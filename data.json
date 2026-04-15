@@ -635,6 +635,14 @@
       "kind": "사용",
       "amount": 2380,
       "note": "출퇴근(남양산 출근)"
+    },
+    {
+      "id": "mo0ozoqh-2lozw6c",
+      "createdAt": 1776296361977,
+      "date": "2026-04-16",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
