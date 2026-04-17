@@ -643,6 +643,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mo28ezot-dpfdyio",
+      "createdAt": 1776389454893,
+      "date": "2026-04-17",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
