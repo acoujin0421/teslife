@@ -678,6 +678,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "moampuh8-0jg5ui5",
+      "createdAt": 1776897205388,
+      "date": "2026-04-23",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
