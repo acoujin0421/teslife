@@ -252,6 +252,17 @@
       "cost": 11564,
       "unit": 280,
       "note": ""
+    },
+    {
+      "id": "moc580dx-z7w9cih",
+      "createdAt": 1776988752117,
+      "date": "2026-04-24",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 51.9,
+      "cost": 14532,
+      "unit": 280,
+      "note": ""
     }
   ],
   "hipass": [
@@ -683,6 +694,14 @@
       "id": "moampuh8-0jg5ui5",
       "createdAt": 1776897205388,
       "date": "2026-04-23",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "moc58b3k-xmh69v8",
+      "createdAt": 1776988766000,
+      "date": "2026-04-24",
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
