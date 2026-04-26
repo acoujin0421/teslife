@@ -1,11 +1,722 @@
 {
-  "charge": [],
-  "hipass": [],
+  "charge": [
+    {
+      "id": "mneoa238-1ttup47",
+      "createdAt": 1774964910356,
+      "date": "2026-03-11",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 16.8,
+      "cost": 3696,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneoajt8-akk5qk8",
+      "createdAt": 1774964933324,
+      "date": "2026-03-11",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 8.4,
+      "cost": 1848,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneoayce-8j852uo",
+      "createdAt": 1774964952158,
+      "date": "2026-03-15",
+      "type": "집밥",
+      "kwh": 31.9,
+      "cost": 7018,
+      "unit": 220,
+      "note": "",
+      "provider": "Turu"
+    },
+    {
+      "id": "mneoft9s-9bqn1xj",
+      "createdAt": 1774965178864,
+      "date": "2026-03-17",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 6.6,
+      "cost": 1452,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneogc5n-8nchmiv",
+      "createdAt": 1774965203339,
+      "date": "2026-03-18",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 22.5,
+      "cost": 4950,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneohmd1-3b4lm72",
+      "createdAt": 1774965263221,
+      "date": "2026-03-21",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 41.8,
+      "cost": 9196,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneom953-0d9v3zs",
+      "createdAt": 1774965479367,
+      "date": "2026-03-24",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 39.4,
+      "cost": 8668,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneomlk1-yumnbqy",
+      "createdAt": 1774965495457,
+      "date": "2026-03-27",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 22.6,
+      "cost": 4972,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneomylq-2tkb8gj",
+      "createdAt": 1774965512366,
+      "date": "2026-03-29",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 30.4,
+      "cost": 6688,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mneor1kt-8m41bns",
+      "createdAt": 1774965702845,
+      "date": "2026-03-13",
+      "type": "급속",
+      "provider": "워터",
+      "kwh": 28.9,
+      "cost": 10030,
+      "unit": 347,
+      "note": "함안휴게소(순천방향)"
+    },
+    {
+      "id": "mneossza-imawqwi",
+      "createdAt": 1774965785014,
+      "date": "2026-03-14",
+      "type": "급속",
+      "provider": "시그넷",
+      "kwh": 57.7,
+      "cost": 20000,
+      "unit": 347,
+      "note": "장성 터미널 제1주차장"
+    },
+    {
+      "id": "mnezvqje-b2glfp3",
+      "createdAt": 1774984397594,
+      "date": "2026-03-15",
+      "type": "급속",
+      "provider": "SK일렉링크",
+      "kwh": 41.3,
+      "cost": 10832,
+      "unit": 262,
+      "note": "사천휴게소(부산방향) 할인 적용(원래 14,332원)"
+    },
+    {
+      "id": "mnlpu216-yai6dph",
+      "createdAt": 1775390786250,
+      "date": "2026-04-01",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 50.4,
+      "cost": 11088,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mnlpue62-sjv9jo2",
+      "createdAt": 1775390801978,
+      "date": "2026-04-03",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 23.8,
+      "cost": 5236,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mnlpvlyz-j2l2rhj",
+      "createdAt": 1775390858747,
+      "date": "2026-04-04",
+      "type": "급속",
+      "provider": "시그넷",
+      "kwh": 7.6,
+      "cost": 2649,
+      "unit": 349,
+      "note": "섬진강휴게소(순천)"
+    },
+    {
+      "id": "mnlpw7up-kro9504",
+      "createdAt": 1775390887105,
+      "date": "2026-04-05",
+      "type": "슈퍼차저",
+      "provider": "테슬라(슈퍼차저)",
+      "kwh": 27,
+      "cost": 9153,
+      "unit": 339,
+      "note": "광주 유스퀘어"
+    },
+    {
+      "id": "mnmea92y-bmjgi7r",
+      "createdAt": 1775431852666,
+      "date": "2026-04-06",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 38.7,
+      "cost": 8514,
+      "unit": 220,
+      "note": ""
+    },
+    {
+      "id": "mnp2zxwz-fs2uz6v",
+      "createdAt": 1775594294387,
+      "date": "2026-04-07",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 7.1,
+      "cost": 1988,
+      "unit": 280,
+      "note": "단가 인상?"
+    },
+    {
+      "id": "mnpwxexv-slt9arw",
+      "createdAt": 1775644564963,
+      "date": "2026-04-08",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 29.5,
+      "cost": 8260,
+      "unit": 280,
+      "note": "단가오름"
+    },
+    {
+      "id": "mnsbq6lx-u0jqbvb",
+      "createdAt": 1775790354165,
+      "date": "2026-04-09",
+      "type": "집밥",
+      "provider": "코스텔",
+      "kwh": 9.4,
+      "cost": 2626,
+      "unit": 279,
+      "note": ""
+    },
+    {
+      "id": "mnw8ndk3-kob6m2e",
+      "createdAt": 1776027049059,
+      "date": "2026-04-11",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 40.1,
+      "cost": 11228,
+      "unit": 280,
+      "note": ""
+    },
+    {
+      "id": "mnzmib5y-2icsg7p",
+      "createdAt": 1776231725830,
+      "date": "2026-04-15",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 33.7,
+      "cost": 9436,
+      "unit": 280,
+      "note": ""
+    },
+    {
+      "id": "mo50ieph-fbk4zo9",
+      "createdAt": 1776557575925,
+      "date": "2026-04-18",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 41.3,
+      "cost": 11564,
+      "unit": 280,
+      "note": ""
+    },
+    {
+      "id": "moc580dx-z7w9cih",
+      "createdAt": 1776988752117,
+      "date": "2026-04-24",
+      "type": "집밥",
+      "provider": "Turu",
+      "kwh": 51.9,
+      "cost": 14532,
+      "unit": 280,
+      "note": ""
+    }
+  ],
+  "hipass": [
+    {
+      "id": "mnezxvl4-o55n58g",
+      "createdAt": 1774984497448,
+      "date": "2026-03-17",
+      "kind": "충전",
+      "amount": 30000,
+      "note": ""
+    },
+    {
+      "id": "mnezy1ev-r0dsoqy",
+      "createdAt": 1774984504999,
+      "date": "2026-03-30",
+      "kind": "충전",
+      "amount": 30000,
+      "note": ""
+    },
+    {
+      "id": "mnf0d13m-h2pg97h",
+      "createdAt": 1774985204434,
+      "date": "2026-03-03",
+      "kind": "사용",
+      "amount": 900,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0dcba-oobiweg",
+      "createdAt": 1774985218966,
+      "date": "2026-03-03",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0e567-r1j2r2s",
+      "createdAt": 1774985256367,
+      "date": "2026-03-04",
+      "kind": "사용",
+      "amount": 900,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0e8k7-ikj8j3f",
+      "createdAt": 1774985260759,
+      "date": "2026-03-04",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0evcf-u2oodu2",
+      "createdAt": 1774985290287,
+      "date": "2026-03-05",
+      "kind": "사용",
+      "amount": 1440,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0f0e0-f42a3ww",
+      "createdAt": 1774985296824,
+      "date": "2026-03-05",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0fbw7-cek2zxu",
+      "createdAt": 1774985311735,
+      "date": "2026-03-06",
+      "kind": "사용",
+      "amount": 1440,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0ffrc-qcjyx2x",
+      "createdAt": 1774985316744,
+      "date": "2026-03-06",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0fshv-uisxuzb",
+      "createdAt": 1774985333251,
+      "date": "2026-03-09",
+      "kind": "사용",
+      "amount": 1440,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0fwy7-vnfrzl8",
+      "createdAt": 1774985339023,
+      "date": "2026-03-09",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0g90a-nqfgyvv",
+      "createdAt": 1774985354650,
+      "date": "2026-03-10",
+      "kind": "사용",
+      "amount": 1440,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0gdb8-qkx15cm",
+      "createdAt": 1774985360228,
+      "date": "2026-03-10",
+      "kind": "사용",
+      "amount": 1800,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0gv6n-1npc29w",
+      "createdAt": 1774985383391,
+      "date": "2026-03-11",
+      "kind": "사용",
+      "amount": 1440,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0hh08-qdp2vrl",
+      "createdAt": 1774985411672,
+      "date": "2026-03-12",
+      "kind": "사용",
+      "amount": 1260,
+      "note": "출근"
+    },
+    {
+      "id": "mnf0hkom-9gpr4g5",
+      "createdAt": 1774985416438,
+      "date": "2026-03-12",
+      "kind": "사용",
+      "amount": 1260,
+      "note": "퇴근"
+    },
+    {
+      "id": "mnf0iem3-69gm8mg",
+      "createdAt": 1774985455227,
+      "date": "2026-03-13",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0izb0-ogsgj2o",
+      "createdAt": 1774985482044,
+      "date": "2026-03-13",
+      "kind": "사용",
+      "amount": 8540,
+      "note": "서부산-동광주"
+    },
+    {
+      "id": "mnf0jk9z-pbfug0b",
+      "createdAt": 1774985509223,
+      "date": "2026-03-14",
+      "kind": "사용",
+      "amount": 1680,
+      "note": "정읍-북장성"
+    },
+    {
+      "id": "mnf0k14s-hictn3z",
+      "createdAt": 1774985531068,
+      "date": "2026-03-15",
+      "kind": "사용",
+      "amount": 8890,
+      "note": "동광주-북부산"
+    },
+    {
+      "id": "mnf0kfnc-cfaopwk",
+      "createdAt": 1774985549880,
+      "date": "2026-03-16",
+      "kind": "사용",
+      "amount": 2160,
+      "note": ""
+    },
+    {
+      "id": "mnf0kx4m-hgdxwm4",
+      "createdAt": 1774985572534,
+      "date": "2026-03-17",
+      "kind": "사용",
+      "amount": 2160,
+      "note": ""
+    },
+    {
+      "id": "mnf0l6gq-4r6w1bz",
+      "createdAt": 1774985584634,
+      "date": "2026-03-18",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0ld27-ze29z5p",
+      "createdAt": 1774985593183,
+      "date": "2026-03-19",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0lkw0-8wf03fm",
+      "createdAt": 1774985603328,
+      "date": "2026-03-20",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0lxr7-cbtnmtz",
+      "createdAt": 1774985620003,
+      "date": "2026-03-23",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0m7cc-s3ezybo",
+      "createdAt": 1774985632428,
+      "date": "2026-03-24",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0mdf6-t2a7wp5",
+      "createdAt": 1774985640306,
+      "date": "2026-03-25",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0mkdx-hee2p52",
+      "createdAt": 1774985649333,
+      "date": "2026-03-26",
+      "kind": "사용",
+      "amount": 2520,
+      "note": ""
+    },
+    {
+      "id": "mnf0n4p8-s7t2ltm",
+      "createdAt": 1774985675660,
+      "date": "2026-03-27",
+      "kind": "사용",
+      "amount": 1260,
+      "note": ""
+    },
+    {
+      "id": "mnf0nsqz-7l8gkrw",
+      "createdAt": 1774985706827,
+      "date": "2026-03-28",
+      "kind": "사용",
+      "amount": 4060,
+      "note": "서부산-문산"
+    },
+    {
+      "id": "mnf0nywf-iros8p3",
+      "createdAt": 1774985714800,
+      "date": "2026-03-28",
+      "kind": "사용",
+      "amount": 4060,
+      "note": "문산-서부산"
+    },
+    {
+      "id": "mnf0olp0-d7f3hty",
+      "createdAt": 1774985744340,
+      "date": "2026-03-30",
+      "kind": "사용",
+      "amount": 2160,
+      "note": ""
+    },
+    {
+      "id": "mnf0p9ex-t7uzjli",
+      "createdAt": 1774985775081,
+      "date": "2026-03-31",
+      "kind": "사용",
+      "amount": 2660,
+      "note": "센텀 만덕 대심도 출근"
+    },
+    {
+      "id": "mnlpqy0s-zyg7zwa",
+      "createdAt": 1775390641084,
+      "date": "2026-04-01",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpqygf-qozsupv",
+      "createdAt": 1775390641647,
+      "date": "2026-04-02",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpqytr-v61cl2u",
+      "createdAt": 1775390642127,
+      "date": "2026-04-03",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnlpsald-1n0p9y1",
+      "createdAt": 1775390704033,
+      "date": "2026-04-04",
+      "kind": "사용",
+      "amount": 9380,
+      "note": "서부산-동광주"
+    },
+    {
+      "id": "mnlpsmw4-lgfgcx6",
+      "createdAt": 1775390719972,
+      "date": "2026-04-05",
+      "kind": "사용",
+      "amount": 8960,
+      "note": "동광주-서부산"
+    },
+    {
+      "id": "mnmeaq95-bc4ao93",
+      "createdAt": 1775431874921,
+      "date": "2026-04-06",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnnw4tsh-xs9j7ff",
+      "createdAt": 1775522298833,
+      "date": "2026-04-05",
+      "kind": "충전",
+      "amount": 30000,
+      "note": ""
+    },
+    {
+      "id": "mno8drxg-hjaks2a",
+      "createdAt": 1775542871716,
+      "date": "2026-04-07",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnpod7z7-fwz2xua",
+      "createdAt": 1775630185891,
+      "date": "2026-04-08",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnsbmaf4-41a95t4",
+      "createdAt": 1775790172480,
+      "date": "2026-04-09",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnsbmi4l-r9fze2y",
+      "createdAt": 1775790182469,
+      "date": "2026-04-10",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnwm10of-xt5tzqh",
+      "createdAt": 1776049520559,
+      "date": "2026-04-13",
+      "kind": "사용",
+      "amount": 2860,
+      "note": "출퇴근(대심도 퇴근)"
+    },
+    {
+      "id": "mnxuqeii-rmvlfak",
+      "createdAt": 1776124607994,
+      "date": "2026-04-14",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mnzmda03-zy8nprj",
+      "createdAt": 1776231491043,
+      "date": "2026-04-15",
+      "kind": "사용",
+      "amount": 2380,
+      "note": "출퇴근(남양산 출근)"
+    },
+    {
+      "id": "mo0ozoqh-2lozw6c",
+      "createdAt": 1776296361977,
+      "date": "2026-04-16",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mo28ezot-dpfdyio",
+      "createdAt": 1776389454893,
+      "date": "2026-04-17",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mo6gvwjx-9wzaqag",
+      "createdAt": 1776645545613,
+      "date": "2026-04-20",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mo99zklw-n6uaikk",
+      "createdAt": 1776815357972,
+      "date": "2026-04-22",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "moampuh8-0jg5ui5",
+      "createdAt": 1776897205388,
+      "date": "2026-04-23",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "moc58b3k-xmh69v8",
+      "createdAt": 1776988766000,
+      "date": "2026-04-24",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    }
+  ],
   "expense": [],
   "ui": {
-    "month": "",
+    "month": "2026-04",
     "trendMetric": "total",
-    "providerExtras": [],
+    "providerExtras": [
+      "시그넷",
+      "워터",
+      "코스텔",
+      "turu"
+    ],
     "chargeTypeFilter": "all",
     "hipassKindFilter": "all"
   }
