@@ -131,17 +131,19 @@
 
           <div class="divider"></div>
 
-          <section aria-label="충전 단가 요약">
-            <h3 class="section__title">충전 단가 요약 (선택 월)</h3>
-            <div class="muted">단가(원/kWh)별로 총 충전량과 횟수를 묶어서 보여줍니다.</div>
-            <div id="chargeUnitSummary" class="muted" style="margin-top:10px">-</div>
-          </section>
-
-          <div class="divider"></div>
-
-          <section aria-label="이번달 충전 추이 문장">
-            <h3 class="section__title">충전 추이</h3>
-            <div id="chargeTrendMessage" class="muted" style="margin-top:8px">-</div>
+          <section aria-label="충전 분석">
+            <h3 class="section__title">충전 분석 (선택 월)</h3>
+            <div class="muted">한 줄 요약과 단가(원/kWh) 분포를 같이 보여줍니다.</div>
+            <div class="insights" style="margin-top:10px">
+              <div class="insight">
+                <div class="insight__title">추이</div>
+                <div id="chargeTrendMessage" class="muted" style="margin-top:6px">-</div>
+              </div>
+              <div class="insight">
+                <div class="insight__title">단가 요약</div>
+                <div id="chargeUnitSummary" class="muted" style="margin-top:6px">-</div>
+              </div>
+            </div>
           </section>
         </aside>
 
@@ -185,10 +187,16 @@
                   </div>
                   <div class="row">
                     <label class="label" for="cProvider">사업자</label>
+                    <!-- 실제 저장 값(공통). UI는 type에 따라 select/input을 토글 -->
+                    <input class="input" id="cProvider" name="provider" type="hidden" />
+
+                    <!-- 집밥: 회사 드롭다운 -->
+                    <select class="input" id="cHomeProvider" aria-label="집밥 충전기 회사 선택" hidden></select>
+
+                    <!-- 그 외: 자유 입력 + 자동완성 -->
                     <input
                       class="input"
-                      id="cProvider"
-                      name="provider"
+                      id="cProviderText"
                       type="text"
                       list="providerList"
                       placeholder="예) 테슬라, 환경부, 차지비… (직접 입력 가능)"
@@ -198,7 +206,7 @@
                   </div>
                   <div class="row">
                     <label class="label" for="cKwh">충전량 (kWh)</label>
-                    <input class="input" id="cKwh" name="kwh" type="number" inputmode="decimal" min="0" step="0.1" required />
+                    <input class="input" id="cKwh" name="kwh" type="number" inputmode="decimal" min="0" step="0.01" required />
                   </div>
                   <div class="row">
                     <label class="label" for="cCost">금액 (원)</label>
@@ -233,7 +241,7 @@
                 </div>
               </div>
               <div class="tableWrap">
-                <table class="table" aria-label="충전 기록 목록">
+                <table class="table table--charge" aria-label="충전 기록 목록">
                   <thead>
                     <tr>
                       <th>날짜</th>
@@ -313,7 +321,7 @@
                 </div>
               </div>
               <div class="tableWrap">
-                <table class="table" aria-label="하이패스 기록 목록">
+                <table class="table table--hipass" aria-label="하이패스 기록 목록">
                   <thead>
                     <tr>
                       <th>날짜</th>
@@ -371,7 +379,7 @@
               <div class="divider"></div>
               <h3 class="section__title">목록</h3>
               <div class="tableWrap">
-                <table class="table" aria-label="기타 지출 목록">
+                <table class="table table--expense" aria-label="기타 지출 목록">
                   <thead>
                     <tr>
                       <th>날짜</th>

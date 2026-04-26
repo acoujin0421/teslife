@@ -30,6 +30,78 @@ const KNOWN_PROVIDERS = [
   "한전KDN",
 ];
 
+// 집밥(가정용) 충전기 회사 목록: 여기만 수정하면 추가/삭제가 쉬움
+const HOME_PROVIDERS = [
+  "GS차지비",
+  "에버온",
+  "환경부",
+  "LG유플러스(볼트업)",
+  "한국전력",
+  "이지차저",
+  "플러그링크",
+  "채비",
+  "스타코프",
+  "나이스차저",
+  "TURU by 휴맥스EV",
+  "한국전기차충전서비스",
+  "이카플러그",
+  "현대엔지니어링",
+  "아이파킹EV",
+  "클린일렉스",
+  "차지인",
+  "한국전기차인프라기술",
+  "한화솔루션",
+  "TURU by 제주전기자동차서비스",
+  "이브이시스(EVSIS)",
+  "블루네트웍스",
+  "서울이브이",
+  "스파로스EV",
+  "타디스테크놀로지",
+  "LG유플러스(헬로플러그인)",
+  "이엘일렉트릭",
+  "쿨사인 주식회사",
+  "이앤에이치에너지",
+  "서울에너지공사",
+  "씨어스",
+  "제주특별자치도",
+  "주식회사 태성콘텍",
+  "레드이엔지",
+  "매니지온",
+  "한솔엠에스",
+  "엘에스이링크",
+  "GS칼텍스",
+  "펌프킨",
+  "유니이브이",
+  "캐스트프로",
+  "E1",
+  "모던텍",
+  "딜라이브",
+  "한마음장애인복지회",
+  "아하",
+  "크로커스",
+  "대한송유관공사",
+  "그리드위즈",
+  "스칼리데이터",
+  "아이온커뮤니케이션즈",
+  "뉴로모빌리티",
+  "넥씽",
+  "에바",
+  "정읍시",
+  "익산시",
+  "군포시",
+  "삼척시",
+  "세종시",
+  "김해시",
+  "엔라이튼",
+  "전주시",
+  "부안군",
+  "순천시",
+  "제주에너지공사",
+  "한국환경공단",
+];
+
+const DEFAULT_HOME_PROVIDER = "TURU by 휴맥스EV";
+
 function uid() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
 }
@@ -520,10 +592,10 @@ function renderChargeTable() {
               r.type === "집밥" || r.type === "완속" ? "badge badge--mint" : r.type === "슈퍼차저" ? "badge badge--accent" : "badge";
             const providerHtml = provider ? `<div class="nowrap">${provider}</div>` : `<div class="cellSub">-</div>`;
             return `<tr>
-  <td class="nowrap">${escapeHtml(r.date)}</td>
+  <td class="nowrap">${escapeHtml(r.date)}${provider ? `<div class="cellSub">${provider}</div>` : ""}</td>
   <td class="nowrap"><span class="${typeBadgeClass}">${typeText}</span></td>
   <td>${providerHtml}</td>
-  <td class="num">${escapeHtml(formatNum(r.kwh, 1))}</td>
+  <td class="num">${escapeHtml(formatNum(r.kwh, 2))}</td>
   <td class="num"><span class="money">${escapeHtml(formatWon(r.cost))}</span><div class="cellSub">${unit ? `${unit.toLocaleString("ko-KR")}원/kWh` : "-"}</div></td>
   <td class="memoCell" title="${note ? escapeHtml(noteRaw) : ""}">${note}</td>
   <td class="cell-actions">
@@ -643,7 +715,7 @@ function renderKpis() {
   setText("kpiChargeCost", formatWon(chargeCost));
   setText(
     "kpiChargeMeta",
-    charge.length === 0 ? "기록 없음" : `${formatNum(chargeKwh, 1)}kWh · ${chargeUnit.toLocaleString("ko-KR")}원/kWh`,
+    charge.length === 0 ? "기록 없음" : `${formatNum(chargeKwh, 2)}kWh · ${chargeUnit.toLocaleString("ko-KR")}원/kWh`,
   );
 
   setText("kpiHipassCost", formatWon(hipassNet));
@@ -708,7 +780,7 @@ function renderChargeTrendMessage(chargeRows) {
   const avgUnit = computeUnitWonPerKwh(totalCost, totalKwh);
 
   if (count === 1) {
-    el.textContent = `${title}에는 1회 충전했습니다. (${lastDate}, ${formatNum(totalKwh, 1)}kWh · ${formatWon(
+    el.textContent = `${title}에는 1회 충전했습니다. (${lastDate}, ${formatNum(totalKwh, 2)}kWh · ${formatWon(
       totalCost,
     )}${avgUnit ? ` · ${avgUnit.toLocaleString("ko-KR")}원/kWh` : ""})`;
     return;
@@ -716,8 +788,8 @@ function renderChargeTrendMessage(chargeRows) {
 
   el.textContent =
     `${title}에는 평균 ${formatNum(everyDays, 1)}일에 한 번, 평균 ${formatWon(avgCost)}씩(` +
-    `${formatNum(avgKwh, 1)}kWh) 충전하고 있습니다. ` +
-    `총 ${count}회 · ${formatNum(totalKwh, 1)}kWh · ${formatWon(totalCost)}${avgUnit ? ` · 평균 ${avgUnit.toLocaleString("ko-KR")}원/kWh` : ""} · 최근 ${lastDate}`;
+    `${formatNum(avgKwh, 2)}kWh) 충전하고 있습니다. ` +
+    `총 ${count}회 · ${formatNum(totalKwh, 2)}kWh · ${formatWon(totalCost)}${avgUnit ? ` · 평균 ${avgUnit.toLocaleString("ko-KR")}원/kWh` : ""} · 최근 ${lastDate}`;
 }
 
 function renderChargeUnitSummary(chargeRows) {
@@ -772,9 +844,9 @@ function renderChargeUnitSummary(chargeRows) {
     const totalCost = x.slowCost + x.fastCost;
     const parts = [
       `${x.unit.toLocaleString("ko-KR")}원/kWh`,
-      `완속 ${formatNum(x.slowKwh, 1)}kWh(${x.slowCount}회)`,
-      `급속 ${formatNum(x.fastKwh, 1)}kWh(${x.fastCount}회)`,
-      `합계 ${formatNum(totalKwh, 1)}kWh · ${formatWon(totalCost)}`,
+      `완속 ${formatNum(x.slowKwh, 2)}kWh(${x.slowCount}회)`,
+      `급속 ${formatNum(x.fastKwh, 2)}kWh(${x.fastCount}회)`,
+      `합계 ${formatNum(totalKwh, 2)}kWh · ${formatWon(totalCost)}`,
     ];
     return parts.join(" · ");
   });
@@ -782,10 +854,10 @@ function renderChargeUnitSummary(chargeRows) {
     const totalKwh = restAgg.slowKwh + restAgg.fastKwh;
     const totalCost = restAgg.slowCost + restAgg.fastCost;
     lines.push(
-      `기타 · 완속 ${formatNum(restAgg.slowKwh, 1)}kWh(${restAgg.slowCount}회) · 급속 ${formatNum(
+      `기타 · 완속 ${formatNum(restAgg.slowKwh, 2)}kWh(${restAgg.slowCount}회) · 급속 ${formatNum(
         restAgg.fastKwh,
-        1,
-      )}kWh(${restAgg.fastCount}회) · 합계 ${formatNum(totalKwh, 1)}kWh · ${formatWon(totalCost)}`,
+        2,
+      )}kWh(${restAgg.fastCount}회) · 합계 ${formatNum(totalKwh, 2)}kWh · ${formatWon(totalCost)}`,
     );
   }
   el.innerHTML = `<div style="display:grid;gap:8px">${lines.map((s) => `<div>${escapeHtml(s)}</div>`).join("")}</div>`;
@@ -858,29 +930,74 @@ function renderTrendChart() {
     return { x, y, v };
   });
 
-  const lineD = pts
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
-    .join(" ");
+  const smoothPath = (points) => {
+    if (!points || points.length === 0) return "";
+    if (points.length === 1) return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+    const d = [`M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`];
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i - 1] || points[i];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[i + 2] || p2;
+      // Catmull-Rom -> Bezier (tension 0.5)
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      d.push(
+        `C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)} ${cp2x.toFixed(1)} ${cp2y.toFixed(1)} ${p2.x.toFixed(
+          1,
+        )} ${p2.y.toFixed(1)}`,
+      );
+    }
+    return d.join(" ");
+  };
+
+  const lineD = smoothPath(pts);
   const areaD = `${lineD} L ${(padX + innerW).toFixed(1)} ${(padY + innerH).toFixed(1)} L ${padX.toFixed(
     1,
   )} ${(padY + innerH).toFixed(1)} Z`;
 
-  const stroke = "rgba(124,140,255,.95)";
-  const fill = "rgba(124,140,255,.16)";
+  const gridLines = 4;
+  const grid = Array.from({ length: gridLines + 1 }).map((_, i) => {
+    const y = padY + (innerH * i) / gridLines;
+    return `<line x1="${padX}" x2="${padX + innerW}" y1="${y.toFixed(1)}" y2="${y.toFixed(
+      1,
+    )}" stroke="rgba(36,50,75,.08)" stroke-width="1" />`;
+  });
+
+  const stroke = "url(#gStroke)";
+  const fill = "url(#gFill)";
   const dot = "rgba(103,211,192,.95)";
+  const dot2 = "rgba(124,140,255,.95)";
 
   const last = pts[pts.length - 1];
+  const minV = Math.min(...values, 0);
+  const maxV = Math.max(...values, 0);
+  const minP = pts.find((p) => p.v === minV) || pts[0];
+  const maxP = pts.find((p) => p.v === maxV) || pts[pts.length - 1];
   wrap.innerHTML = `
 <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="월별 추이 차트">
   <defs>
+    <linearGradient id="gStroke" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="rgba(103,211,192,.95)" />
+      <stop offset="60%" stop-color="rgba(124,140,255,.98)" />
+      <stop offset="100%" stop-color="rgba(255,111,145,.80)" />
+    </linearGradient>
     <linearGradient id="gFill" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="${fill}" />
+      <stop offset="0%" stop-color="rgba(124,140,255,.18)" />
       <stop offset="100%" stop-color="rgba(124,140,255,0)" />
     </linearGradient>
+    <filter id="shadow" x="-20%" y="-40%" width="140%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(24,36,64,.18)" />
+    </filter>
   </defs>
-  <path d="${areaD}" fill="url(#gFill)"></path>
-  <path d="${lineD}" fill="none" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round"></path>
-  <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="3.5" fill="${dot}"></circle>
+  ${grid.join("")}
+  <path d="${areaD}" fill="${fill}"></path>
+  <path d="${lineD}" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" filter="url(#shadow)"></path>
+  <circle cx="${maxP.x.toFixed(1)}" cy="${maxP.y.toFixed(1)}" r="3.5" fill="${dot2}"></circle>
+  <circle cx="${minP.x.toFixed(1)}" cy="${minP.y.toFixed(1)}" r="3.5" fill="rgba(255,111,145,.90)"></circle>
+  <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="4" fill="${dot}" stroke="rgba(255,255,255,.9)" stroke-width="1.2"></circle>
 </svg>`;
 
   const labels = { total: "총합", charge: "충전비", hipass: "하이패스(사용)", expense: "기타 지출" };
@@ -901,7 +1018,7 @@ function sum(arr) {
 function addCharge(form) {
   const date = form.date.value;
   const type = form.type.value;
-  const provider = (form.provider?.value || "").trim();
+  const provider = getProviderHiddenValue();
   const kwh = parsePositiveNumber(form.kwh.value);
   const cost = parsePositiveNumber(form.cost.value);
   const unit = computeUnitWonPerKwh(cost, kwh);
@@ -939,7 +1056,13 @@ function addCharge(form) {
   if (provider) rememberProvider(provider);
   saveState();
   render();
-  if (form.provider) form.provider.value = "";
+  // 다음 입력을 위해: 집밥은 기본값 유지, 그 외는 비우기
+  if (type === "집밥") {
+    setProviderHiddenValue(DEFAULT_HOME_PROVIDER);
+  } else {
+    setProviderHiddenValue("");
+  }
+  syncProviderUiByChargeType(type === "집밥");
   form.kwh.value = "";
   form.cost.value = "";
   if (form.unit) form.unit.value = "-";
@@ -1029,7 +1152,8 @@ function startEditCharge(id) {
   if (!form) return;
   form.date.value = item.date || todayISO();
   form.type.value = item.type || "집밥";
-  if (form.provider) form.provider.value = item.provider || "";
+  setProviderHiddenValue(item.provider || "");
+  syncProviderUiByChargeType((item.type || "집밥") === "집밥");
   form.kwh.value = item.kwh ?? "";
   form.cost.value = item.cost ?? "";
   if (form.note) form.note.value = item.note || "";
@@ -1134,10 +1258,97 @@ function wireChargeUnitAutoCalc() {
   update();
 }
 
+function wireChargeProviderUi() {
+  const typeEl = document.getElementById("cType");
+  const homeSel = document.getElementById("cHomeProvider");
+  const textEl = document.getElementById("cProviderText");
+  if (!typeEl || !homeSel || !textEl) return;
+
+  wireHomeProviderSelect();
+
+  // 초기 상태: 집밥 기본값 적용
+  syncProviderUiByChargeType(true);
+
+  typeEl.addEventListener("change", () => {
+    // 집밥으로 바꿀 때는 입력 편의를 위해 기본값 자동 지정
+    const isHome = (typeEl.value || "") === "집밥";
+    syncProviderUiByChargeType(isHome);
+  });
+
+  homeSel.addEventListener("change", () => setProviderHiddenValue(homeSel.value));
+  ["input", "change"].forEach((evt) => textEl.addEventListener(evt, () => setProviderHiddenValue(textEl.value)));
+}
+
 function wireProviderDatalist() {
   const dl = document.getElementById("providerList");
   if (!dl) return;
   dl.innerHTML = getAllProviders().map((p) => `<option value="${escapeHtml(p)}"></option>`).join("");
+}
+
+function normalizeHomeProvider(s) {
+  return String(s || "").trim().replace(/\s+/g, " ");
+}
+
+function getHomeProviders() {
+  const merged = HOME_PROVIDERS.map(normalizeHomeProvider).filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  for (const p of merged) {
+    const key = p.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(p);
+  }
+  out.sort((a, b) => a.localeCompare(b, "ko-KR"));
+  return out;
+}
+
+function wireHomeProviderSelect() {
+  const sel = document.getElementById("cHomeProvider");
+  if (!sel) return;
+  const list = getHomeProviders();
+  sel.innerHTML = list.map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("");
+}
+
+function setProviderHiddenValue(v) {
+  const hidden = document.getElementById("cProvider");
+  if (hidden) hidden.value = (v || "").trim();
+}
+
+function getProviderHiddenValue() {
+  const hidden = document.getElementById("cProvider");
+  return (hidden?.value || "").trim();
+}
+
+function syncProviderUiByChargeType(forceDefaultForHome = false) {
+  const typeEl = document.getElementById("cType");
+  const homeSel = document.getElementById("cHomeProvider");
+  const textEl = document.getElementById("cProviderText");
+  if (!typeEl || !homeSel || !textEl) return;
+
+  const isHome = (typeEl.value || "") === "집밥";
+  homeSel.hidden = !isHome;
+  textEl.hidden = isHome;
+
+  if (isHome) {
+    // 기본값(집밥)은 TURU by 휴맥스EV
+    const current = getProviderHiddenValue();
+    const next = forceDefaultForHome ? DEFAULT_HOME_PROVIDER : current || DEFAULT_HOME_PROVIDER;
+
+    // 목록에 없던 기존 값(과거 데이터)도 편집 가능하도록 임시로 추가
+    const list = getHomeProviders();
+    if (next && !list.some((x) => x.toLowerCase() === next.toLowerCase())) {
+      const opt = document.createElement("option");
+      opt.value = next;
+      opt.textContent = next;
+      homeSel.appendChild(opt);
+    }
+
+    homeSel.value = next || DEFAULT_HOME_PROVIDER;
+    setProviderHiddenValue(homeSel.value);
+  } else {
+    textEl.value = getProviderHiddenValue();
+  }
 }
 
 function normalizeProvider(s) {
@@ -1366,6 +1577,7 @@ async function init() {
   wireTabs();
   wireForms();
   wireChargeUnitAutoCalc();
+  wireChargeProviderUi();
   wireProviderDatalist();
   seedProvidersFromHistory();
   wireMonthPicker();
