@@ -192,6 +192,14 @@
 
                     <!-- 집밥: 회사 드롭다운 -->
                     <select class="input" id="cHomeProvider" aria-label="집밥 충전기 회사 선택" hidden></select>
+                    <div id="homeProviderEditor" class="homeProviderEditor" hidden>
+                      <div class="muted" style="margin-top:6px">목록에 없으면 추가해서 바로 선택할 수 있어요.</div>
+                      <div class="homeProviderEditor__row" style="margin-top:8px">
+                        <input class="input" id="homeProviderNew" type="text" placeholder="회사명 추가 (예: OO충전)" autocomplete="off" />
+                        <button class="btn btn--ghost" id="btnAddHomeProvider" type="button">추가</button>
+                      </div>
+                      <div id="homeProviderExtras" class="homeProviderEditor__chips" style="margin-top:10px"></div>
+                    </div>
 
                     <!-- 그 외: 자유 입력 + 자동완성 -->
                     <input

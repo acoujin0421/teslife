@@ -1262,9 +1262,12 @@ function wireChargeProviderUi() {
   const typeEl = document.getElementById("cType");
   const homeSel = document.getElementById("cHomeProvider");
   const textEl = document.getElementById("cProviderText");
+  const addBtn = document.getElementById("btnAddHomeProvider");
+  const newEl = document.getElementById("homeProviderNew");
   if (!typeEl || !homeSel || !textEl) return;
 
   wireHomeProviderSelect();
+  renderHomeProviderExtrasUi();
 
   // 초기 상태: 집밥 기본값 적용
   syncProviderUiByChargeType(true);
@@ -1277,6 +1280,45 @@ function wireChargeProviderUi() {
 
   homeSel.addEventListener("change", () => setProviderHiddenValue(homeSel.value));
   ["input", "change"].forEach((evt) => textEl.addEventListener(evt, () => setProviderHiddenValue(textEl.value)));
+
+  addBtn?.addEventListener("click", () => {
+    const name = (newEl?.value || "").trim();
+    if (!name) return;
+    rememberHomeProvider(name);
+    wireHomeProviderSelect();
+    renderHomeProviderExtrasUi();
+    homeSel.value = name;
+    setProviderHiddenValue(name);
+    if (newEl) newEl.value = "";
+  });
+
+  newEl?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addBtn?.click();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    if (t.dataset.action !== "home-provider-remove") return;
+    const name = t.dataset.name || "";
+    removeHomeProviderExtra(name);
+    wireHomeProviderSelect();
+    renderHomeProviderExtrasUi();
+
+    // 현재 선택값이 삭제된 추가항목이면 기본값으로 되돌림
+    const selected = homeSel.value;
+    const extras = Array.isArray(state?.ui?.homeProviderExtras) ? state.ui.homeProviderExtras : [];
+    const stillExists = getHomeProviders().some((x) => x.toLowerCase() === selected.toLowerCase());
+    if (!stillExists) {
+      homeSel.value = DEFAULT_HOME_PROVIDER;
+      setProviderHiddenValue(DEFAULT_HOME_PROVIDER);
+    } else {
+      setProviderHiddenValue(homeSel.value);
+    }
+  });
 }
 
 function wireProviderDatalist() {
@@ -1290,7 +1332,8 @@ function normalizeHomeProvider(s) {
 }
 
 function getHomeProviders() {
-  const merged = HOME_PROVIDERS.map(normalizeHomeProvider).filter(Boolean);
+  const extras = Array.isArray(state?.ui?.homeProviderExtras) ? state.ui.homeProviderExtras : [];
+  const merged = [...HOME_PROVIDERS, ...extras].map(normalizeHomeProvider).filter(Boolean);
   const seen = new Set();
   const out = [];
   for (const p of merged) {
@@ -1310,6 +1353,47 @@ function wireHomeProviderSelect() {
   sel.innerHTML = list.map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("");
 }
 
+function rememberHomeProvider(name) {
+  const p = normalizeHomeProvider(name);
+  if (!p) return;
+  if (!state.ui) state.ui = {};
+  if (!state.ui.homeProviderExtras) state.ui.homeProviderExtras = [];
+
+  const baseKeys = new Set(HOME_PROVIDERS.map((x) => normalizeHomeProvider(x).toLowerCase()));
+  const extraKeys = new Set(state.ui.homeProviderExtras.map((x) => normalizeHomeProvider(x).toLowerCase()));
+  const key = p.toLowerCase();
+  if (baseKeys.has(key) || extraKeys.has(key)) return;
+
+  state.ui.homeProviderExtras.push(p);
+  state.ui.homeProviderExtras.sort((a, b) => a.localeCompare(b, "ko-KR"));
+  saveState();
+}
+
+function removeHomeProviderExtra(name) {
+  const p = normalizeHomeProvider(name);
+  if (!p) return;
+  if (!Array.isArray(state?.ui?.homeProviderExtras)) return;
+  const key = p.toLowerCase();
+  state.ui.homeProviderExtras = state.ui.homeProviderExtras.filter((x) => normalizeHomeProvider(x).toLowerCase() !== key);
+  saveState();
+}
+
+function renderHomeProviderExtrasUi() {
+  const wrap = document.getElementById("homeProviderExtras");
+  if (!wrap) return;
+  const extras = Array.isArray(state?.ui?.homeProviderExtras) ? state.ui.homeProviderExtras : [];
+  if (extras.length === 0) {
+    wrap.innerHTML = `<div class="muted">추가한 회사가 없습니다.</div>`;
+    return;
+  }
+  wrap.innerHTML = extras
+    .map((p) => {
+      const safe = escapeHtml(p);
+      return `<span class="chip">${safe}<button class="chip__x" type="button" data-action="home-provider-remove" data-name="${safe}" aria-label="${safe} 삭제">삭제</button></span>`;
+    })
+    .join("");
+}
+
 function setProviderHiddenValue(v) {
   const hidden = document.getElementById("cProvider");
   if (hidden) hidden.value = (v || "").trim();
@@ -1324,11 +1408,13 @@ function syncProviderUiByChargeType(forceDefaultForHome = false) {
   const typeEl = document.getElementById("cType");
   const homeSel = document.getElementById("cHomeProvider");
   const textEl = document.getElementById("cProviderText");
+  const editor = document.getElementById("homeProviderEditor");
   if (!typeEl || !homeSel || !textEl) return;
 
   const isHome = (typeEl.value || "") === "집밥";
   homeSel.hidden = !isHome;
   textEl.hidden = isHome;
+  if (editor) editor.hidden = !isHome;
 
   if (isHome) {
     // 기본값(집밥)은 TURU by 휴맥스EV
