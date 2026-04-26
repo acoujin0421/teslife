@@ -922,41 +922,23 @@ function renderTrendChart() {
   const innerW = W - padX * 2;
   const innerH = H - padY * 2;
 
-  const denom = max - min || 1;
-  const pts = values.map((v, i) => {
-    const x = padX + (innerW * i) / Math.max(1, values.length - 1);
-    const t = (v - min) / denom; // 0..1
-    const y = padY + innerH * (1 - t);
-    return { x, y, v };
+  // Bar chart scaling (0 baseline)
+  const hi = Math.max(0, ...values);
+  const denom = hi || 1;
+
+  const n = values.length;
+  const gap = 6;
+  const barW = Math.max(6, (innerW - gap * (n - 1)) / n);
+  const totalBarsW = barW * n + gap * (n - 1);
+  const startX = padX + (innerW - totalBarsW) / 2;
+  const baseY = padY + innerH;
+
+  const bars = values.map((v, i) => {
+    const h = innerH * Math.max(0, v) / denom;
+    const x = startX + i * (barW + gap);
+    const y = baseY - h;
+    return { i, v, x, y, w: barW, h };
   });
-
-  const smoothPath = (points) => {
-    if (!points || points.length === 0) return "";
-    if (points.length === 1) return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
-    const d = [`M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`];
-    for (let i = 0; i < points.length - 1; i++) {
-      const p0 = points[i - 1] || points[i];
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const p3 = points[i + 2] || p2;
-      // Catmull-Rom -> Bezier (tension 0.5)
-      const cp1x = p1.x + (p2.x - p0.x) / 6;
-      const cp1y = p1.y + (p2.y - p0.y) / 6;
-      const cp2x = p2.x - (p3.x - p1.x) / 6;
-      const cp2y = p2.y - (p3.y - p1.y) / 6;
-      d.push(
-        `C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)} ${cp2x.toFixed(1)} ${cp2y.toFixed(1)} ${p2.x.toFixed(
-          1,
-        )} ${p2.y.toFixed(1)}`,
-      );
-    }
-    return d.join(" ");
-  };
-
-  const lineD = smoothPath(pts);
-  const areaD = `${lineD} L ${(padX + innerW).toFixed(1)} ${(padY + innerH).toFixed(1)} L ${padX.toFixed(
-    1,
-  )} ${(padY + innerH).toFixed(1)} Z`;
 
   const gridLines = 4;
   const grid = Array.from({ length: gridLines + 1 }).map((_, i) => {
@@ -966,38 +948,41 @@ function renderTrendChart() {
     )}" stroke="rgba(36,50,75,.08)" stroke-width="1" />`;
   });
 
-  const stroke = "url(#gStroke)";
-  const fill = "url(#gFill)";
-  const dot = "rgba(103,211,192,.95)";
-  const dot2 = "rgba(124,140,255,.95)";
-
-  const last = pts[pts.length - 1];
-  const minV = Math.min(...values, 0);
   const maxV = Math.max(...values, 0);
-  const minP = pts.find((p) => p.v === minV) || pts[0];
-  const maxP = pts.find((p) => p.v === maxV) || pts[pts.length - 1];
+  const maxBar = bars.find((b) => b.v === maxV) || bars[bars.length - 1];
+  const lastBar = bars[bars.length - 1];
+  const barsSvg = bars
+    .map((b) => {
+      const isLast = b.i === lastBar.i;
+      const isMax = b.i === maxBar.i && maxV > 0;
+      const fillId = isLast ? "gBarLast" : isMax ? "gBarMax" : "gBar";
+      const opacity = b.v > 0 ? 1 : 0.25;
+      return `<rect x="${b.x.toFixed(1)}" y="${b.y.toFixed(1)}" width="${b.w.toFixed(1)}" height="${b.h.toFixed(
+        1,
+      )}" rx="6" ry="6" fill="url(#${fillId})" opacity="${opacity}"></rect>`;
+    })
+    .join("");
   wrap.innerHTML = `
 <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="월별 추이 차트">
   <defs>
-    <linearGradient id="gStroke" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0%" stop-color="rgba(103,211,192,.95)" />
-      <stop offset="60%" stop-color="rgba(124,140,255,.98)" />
-      <stop offset="100%" stop-color="rgba(255,111,145,.80)" />
+    <linearGradient id="gBar" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(124,140,255,.78)" />
+      <stop offset="100%" stop-color="rgba(124,140,255,.18)" />
     </linearGradient>
-    <linearGradient id="gFill" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="rgba(124,140,255,.18)" />
-      <stop offset="100%" stop-color="rgba(124,140,255,0)" />
+    <linearGradient id="gBarLast" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(103,211,192,.90)" />
+      <stop offset="100%" stop-color="rgba(103,211,192,.22)" />
+    </linearGradient>
+    <linearGradient id="gBarMax" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,111,145,.85)" />
+      <stop offset="100%" stop-color="rgba(255,111,145,.20)" />
     </linearGradient>
     <filter id="shadow" x="-20%" y="-40%" width="140%" height="200%">
       <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(24,36,64,.18)" />
     </filter>
   </defs>
   ${grid.join("")}
-  <path d="${areaD}" fill="${fill}"></path>
-  <path d="${lineD}" fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" filter="url(#shadow)"></path>
-  <circle cx="${maxP.x.toFixed(1)}" cy="${maxP.y.toFixed(1)}" r="3.5" fill="${dot2}"></circle>
-  <circle cx="${minP.x.toFixed(1)}" cy="${minP.y.toFixed(1)}" r="3.5" fill="rgba(255,111,145,.90)"></circle>
-  <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="4" fill="${dot}" stroke="rgba(255,255,255,.9)" stroke-width="1.2"></circle>
+  <g filter="url(#shadow)">${barsSvg}</g>
 </svg>`;
 
   const labels = { total: "총합", charge: "충전비", hipass: "하이패스(사용)", expense: "기타 지출" };
