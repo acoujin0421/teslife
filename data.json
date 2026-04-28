@@ -263,17 +263,6 @@
       "cost": 14532,
       "unit": 280,
       "note": ""
-    },
-    {
-      "id": "moikw8j6-tpfmlix",
-      "createdAt": 1777377873714,
-      "date": "2026-04-27",
-      "type": "집밥",
-      "provider": "TURU by 휴맥스EV",
-      "kwh": 43.8,
-      "cost": 12264,
-      "unit": 280,
-      "note": ""
     }
   ],
   "hipass": [
@@ -724,6 +713,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "moikxsez-l1icza6",
+      "createdAt": 1777377946139,
+      "date": "2026-04-28",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
@@ -734,8 +731,7 @@
       "시그넷",
       "워터",
       "코스텔",
-      "turu",
-      "TURU by 휴맥스EV"
+      "turu"
     ],
     "chargeTypeFilter": "all",
     "hipassKindFilter": "all"
