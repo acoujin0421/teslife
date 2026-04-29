@@ -732,6 +732,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mojg41es-13v8c06",
+      "createdAt": 1777430305828,
+      "date": "2026-04-29",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
