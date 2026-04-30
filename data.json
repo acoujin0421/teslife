@@ -740,6 +740,14 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mokvyzub-od7kfbd",
+      "createdAt": 1777517410547,
+      "date": "2026-04-30",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
