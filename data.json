@@ -748,11 +748,83 @@
       "kind": "사용",
       "amount": 2520,
       "note": "출퇴근"
+    },
+    {
+      "id": "mow4efwn-4jam2f4",
+      "createdAt": 1778196696071,
+      "date": "2026-05-01",
+      "kind": "사용",
+      "amount": 1400,
+      "note": "동래"
+    },
+    {
+      "id": "mow4erxs-9defema",
+      "createdAt": 1778196711664,
+      "date": "2026-05-01",
+      "kind": "사용",
+      "amount": 9310,
+      "note": "북부산-북장성"
+    },
+    {
+      "id": "mow4f3oc-yn7hht5",
+      "createdAt": 1778196726876,
+      "date": "2026-05-03",
+      "kind": "사용",
+      "amount": 1120,
+      "note": "북장성-북광주"
+    },
+    {
+      "id": "mow4fdhq-mvklumq",
+      "createdAt": 1778196739598,
+      "date": "2026-05-03",
+      "kind": "사용",
+      "amount": 1470,
+      "note": "담양-북장성"
+    },
+    {
+      "id": "mow4fp1m-8l6pobs",
+      "createdAt": 1778196754570,
+      "date": "2026-05-04",
+      "kind": "사용",
+      "amount": 5600,
+      "note": "북장성-서진주"
+    },
+    {
+      "id": "mow4fzde-7ky25gh",
+      "createdAt": 1778196767954,
+      "date": "2026-05-04",
+      "kind": "사용",
+      "amount": 3990,
+      "note": "진주-서부산"
+    },
+    {
+      "id": "mow4hcta-cxrrycj",
+      "createdAt": 1778196832030,
+      "date": "2026-05-06",
+      "kind": "사용",
+      "amount": 3080,
+      "note": "출퇴근(퇴근중 남양산으로 빠져버림)"
+    },
+    {
+      "id": "mow4hpjy-fpnbly4",
+      "createdAt": 1778196848542,
+      "date": "2026-05-07",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
+    },
+    {
+      "id": "mow4hry4-2gl9mh1",
+      "createdAt": 1778196851644,
+      "date": "2026-05-06",
+      "kind": "사용",
+      "amount": 2520,
+      "note": "출퇴근"
     }
   ],
   "expense": [],
   "ui": {
-    "month": "2026-04",
+    "month": "2026-05",
     "trendMetric": "total",
     "providerExtras": [
       "시그넷",
